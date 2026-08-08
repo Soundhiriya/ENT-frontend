@@ -4,7 +4,7 @@
 
     import RegisterPatientModal from "@/src/components/RegisterPatientModal";
     import SearchPatientModal from "@/src/components/SearchPatientModal";
-    import React, { useEffect, useState } from "react";
+    import React, { Suspense, useEffect, useState } from "react";
     import { UserPlus, Search, History } from "lucide-react";
     import { AppointmentQueueDto, Patient } from "@/src/types/patient";
     import DoctorMainScreen from "@/src/components/DoctorMainScreen";
@@ -17,6 +17,14 @@
     import { useRouter, useSearchParams } from "next/navigation";
 
     const NursePage = () => {
+    return (
+        <Suspense fallback={null}>
+        <NursePageContent />
+        </Suspense>
+    );
+    };
+
+    const NursePageContent = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [registerOpenModal, setRegisterOpenModal] = useState(false);

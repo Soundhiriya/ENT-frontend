@@ -2,7 +2,7 @@
 
 import { setPasswordRequest } from "@/src/services/auth.service";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { toast } from "sonner";
 import {
   KeyRound,
@@ -16,6 +16,14 @@ import {
 const MIN_PASSWORD_LENGTH = 8;
 
 const SetPasswordPage = () => {
+  return (
+    <Suspense fallback={null}>
+      <SetPasswordPageContent />
+    </Suspense>
+  );
+};
+
+const SetPasswordPageContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 

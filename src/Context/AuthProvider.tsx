@@ -25,19 +25,12 @@ export const AuthProvider = ({children} :AuthProviderProps) => {
         setUser(null);
     }
     useEffect(() =>{
-
         if (
-
         pathname === "/" ||
-
         pathname.startsWith("/patient/prescription") || pathname.startsWith("/set-password")
-
     ) {
-
         setLoading(false);
-
         return;
-
     }
         async function loadUser(){
             try {
