@@ -9,7 +9,7 @@ const apiOrigin = process.env.NEXT_PUBLIC_API_URL || "";
 
 const contentSecurityPolicy = [
   "default-src 'self'",
-  "script-src 'self'",
+  "script-src 'self' 'unsafe-inline'",
   "style-src 'self' 'unsafe-inline'",
   `img-src 'self' data: blob: https://*.r2.dev https://*.r2.cloudflarestorage.com`,
   `connect-src 'self' ${apiOrigin}`.trim(),
