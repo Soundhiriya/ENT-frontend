@@ -13,6 +13,14 @@ import {
   CheckCircle2,
 } from "lucide-react";
 
+// This page's entire purpose is to read a one-time token/email from the
+// query string on every visit — it must never be statically prerendered or
+// cached. Without this, Next.js was prerendering it once at build time with
+// no token/email present, then serving that same frozen response (verified
+// via an identical ETag/Content-Length) to every visitor regardless of the
+// real query string in their URL.
+export const dynamic = "force-dynamic";
+
 const MIN_PASSWORD_LENGTH = 8;
 
 const SetPasswordPage = () => {
