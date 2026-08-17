@@ -106,6 +106,7 @@ export default function YoutubeLinkMasterTab() {
                 />
                 <input
                     value={newUrl}
+                    data-no-capitalize
                     onChange={(e) => setNewUrl(e.target.value)}
                     placeholder="YouTube URL"
                     className="min-w-[200px] flex-1 rounded-[10px] border border-[#E5E7EB] bg-slate-50 px-3 py-2.5 text-sm outline-none focus:border-[var(--brand-secondary)] focus:ring-2 focus:ring-[var(--brand-secondary)]/20"
@@ -144,6 +145,7 @@ export default function YoutubeLinkMasterTab() {
                                     />
                                     <input
                                         value={editUrl}
+                                        data-no-capitalize
                                         onChange={(e) => setEditUrl(e.target.value)}
                                         placeholder="YouTube URL"
                                         className="flex-1 rounded-md border border-[#E5E7EB] bg-white px-2 py-1 text-sm outline-none focus:border-[var(--brand-secondary)]"

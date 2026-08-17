@@ -72,7 +72,7 @@ export default function AddUserModal({ open, onClose, onSuccess }: Props) {
             onSuccess();
             onClose();
         } catch (err: any) {
-            setErrors(err?.fieldErrors ?? {});
+            setErrors(err?.message ?? {});
             toast.error(err?.message ?? "Failed to register user");
         } finally {
             setLoading(false);

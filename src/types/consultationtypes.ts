@@ -91,6 +91,15 @@ export interface CreateConsultationDto {
     height?: number;
     temperature?: number;
 
+    // Mirrors the appointment's medical history. The doctor can correct what
+    // the front desk ticked; omitting a field leaves the existing value alone.
+    diabetes?: boolean;
+    hypertension?: boolean;
+    tuberculosis?: boolean;
+    bronchialAsthma?: boolean;
+    epilepsy?: boolean;
+    antenatal?: boolean;
+
     consultationFee: number;
 
     advice?: string;

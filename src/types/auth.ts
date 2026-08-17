@@ -15,4 +15,6 @@ export interface AuthMe{
     email:string
 }
 
-export type Role = "ADMIN" | "DOCTOR" | "NURSE";
+// RECEPTIONIST is a synonym of NURSE — identical permissions and screens,
+// separate only so front-desk staff carry an accurate job title.
+export type Role = "ADMIN" | "DOCTOR" | "NURSE" | "RECEPTIONIST";

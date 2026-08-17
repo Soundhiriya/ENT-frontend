@@ -29,8 +29,8 @@
         try {
         const response = await searchDiagnoses(value);
         setSuggestions(response);
-        } catch (error: any) {
-        toast.error(error.message || error);
+        } catch (error) {
+        toast.error(error instanceof Error ? error.message : "Could not search diagnoses.");
         }
     };
 
@@ -75,6 +75,11 @@
                 addDiagnosis(diagnosis);
                 }
             }}
+            // Commit whatever is still typed when the field loses focus, so a
+            // diagnosis is not silently dropped if Enter was never pressed.
+            // Suggestion clicks use onMouseDown + preventDefault, so they keep
+            // focus here and cannot double-add.
+            onBlur={() => addDiagnosis(diagnosis)}
             className="h-8 w-full rounded-md border border-slate-300 px-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
             />
 

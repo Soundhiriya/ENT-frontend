@@ -161,20 +161,34 @@
 
         <div
             ref={printRef}
-            className="print-page mx-auto mt-8 max-w-4xl rounded-lg border border-slate-200 bg-white p-8 shadow-lg sm:p-10"
+            className="print-page mx-auto mt-8 max-w-4xl rounded-lg border border-slate-200 bg-white p-8 font-rx-sans text-[13px] leading-relaxed text-slate-800 shadow-lg sm:p-10"
         >
-            {/* Letterhead */}
-            <div className="avoid-break flex items-start justify-between border-b border-slate-200 pb-5">
+            {/* Letterhead — matches the doctor-facing prescription: serif
+                hospital name over a heavy rule with a hairline beneath. */}
+            <div className="avoid-break flex items-start justify-between border-b-2 border-slate-800 pb-3">
             <div>
-                <h1 className="text-2xl font-bold text-slate-800 sm:text-3xl">
+                <h1 className="font-rx-serif text-2xl font-bold leading-tight tracking-tight text-slate-900 sm:text-[28px]">
                 {prescription.hospitalName}
                 </h1>
-                <p className="mt-1 text-sm text-slate-500">ENT Specialist</p>
+                <div className="mt-1.5 flex flex-wrap items-baseline gap-x-3 gap-y-0.5">
+                <p className="font-rx-serif text-[13px] font-semibold tracking-wide text-slate-700">
+                    Dr.G.SubaJothiKumar MBBS.,MS(ENT)
+                </p>
+                <span className="text-slate-300">|</span>
+                <p className="text-[11px] uppercase tracking-[0.12em] text-slate-500">
+                    ENT Specialist
+                </p>
+                <span className="text-slate-300">|</span>
+                <p className="text-[11px] uppercase tracking-[0.12em] text-slate-500">
+                    Reg. No. 127855
+                </p>
+                </div>
             </div>
             <div className="hidden h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-slate-800 text-white sm:flex">
                 <Stethoscope size={26} />
             </div>
             </div>
+            <div className="mt-[3px] border-b border-slate-300" />
 
             {/* Patient / doctor info */}
             <div className="avoid-break mt-6 grid grid-cols-1 gap-x-6 gap-y-1 rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm sm:grid-cols-2">
@@ -213,7 +227,7 @@
 
             {/* Vitals */}
             <div className="avoid-break mt-6">
-            <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-500">
+            <h2 className="mb-2.5 border-b border-slate-300 pb-1.5 text-[10.5px] font-semibold uppercase tracking-[0.16em] text-slate-600">
                 Vitals
             </h2>
 
@@ -248,7 +262,7 @@
             {/* Medical History — only conditions the front desk ticked */}
             {activeMedicalHistory.length > 0 && (
             <div className="avoid-break mt-6">
-                <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-500">
+                <h2 className="mb-2.5 border-b border-slate-300 pb-1.5 text-[10.5px] font-semibold uppercase tracking-[0.16em] text-slate-600">
                 Medical History
                 </h2>
                 <div className="flex flex-wrap gap-2">
@@ -267,7 +281,7 @@
             {/* Endoscopy Images — primary focus */}
             {prescription.endoscopyImages.length > 0 && (
             <div className="mt-8">
-                <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-slate-500">
+                <h2 className="mb-4 border-b border-slate-300 pb-1.5 text-[10.5px] font-semibold uppercase tracking-[0.16em] text-slate-600">
                 Endoscopy Images
                 </h2>
 
@@ -300,7 +314,7 @@
             {/* Recommended videos */}
             {prescription.youtubeVideos.length > 0 && (
             <div className="avoid-break mt-8">
-                <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-500">
+                <h2 className="mb-2.5 border-b border-slate-300 pb-1.5 text-[10.5px] font-semibold uppercase tracking-[0.16em] text-slate-600">
                 Recommended Videos
                 </h2>
 
@@ -324,7 +338,7 @@
             {/* Chief complaints */}
             {prescription.complaints.length > 0 && (
             <div className="avoid-break mt-8">
-                <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-500">
+                <h2 className="mb-2.5 border-b border-slate-300 pb-1.5 text-[10.5px] font-semibold uppercase tracking-[0.16em] text-slate-600">
                 Chief Complaints
                 </h2>
                 <div className="flex flex-wrap gap-2">
@@ -343,7 +357,7 @@
             {/* Findings */}
             {prescription.findings.length > 0 && (
             <div className="avoid-break mt-6">
-                <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-500">
+                <h2 className="mb-2.5 border-b border-slate-300 pb-1.5 text-[10.5px] font-semibold uppercase tracking-[0.16em] text-slate-600">
                 Findings
                 </h2>
                 <div className="flex flex-wrap gap-2">
@@ -362,7 +376,7 @@
             {/* Otoendoscopy */}
             {prescription.otoendoscopies.length > 0 && (
             <div className="avoid-break mt-6">
-                <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-500">
+                <h2 className="mb-2.5 border-b border-slate-300 pb-1.5 text-[10.5px] font-semibold uppercase tracking-[0.16em] text-slate-600">
                 Otoendoscopy
                 </h2>
                 <div className="flex flex-wrap gap-2">
@@ -381,7 +395,7 @@
             {/* Diagnostic Nasal Endoscopy */}
             {prescription.diagnosticNasalEndoscopies.length > 0 && (
             <div className="avoid-break mt-6">
-                <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-500">
+                <h2 className="mb-2.5 border-b border-slate-300 pb-1.5 text-[10.5px] font-semibold uppercase tracking-[0.16em] text-slate-600">
                 Diagnostic Nasal Endoscopy
                 </h2>
                 <div className="flex flex-wrap gap-2">
@@ -400,7 +414,7 @@
             {/* Video Laryngoscopy */}
             {prescription.videoLaryngoscopies.length > 0 && (
             <div className="avoid-break mt-6">
-                <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-500">
+                <h2 className="mb-2.5 border-b border-slate-300 pb-1.5 text-[10.5px] font-semibold uppercase tracking-[0.16em] text-slate-600">
                 Video Laryngoscopy
                 </h2>
                 <div className="flex flex-wrap gap-2">
@@ -419,7 +433,7 @@
             {/* Diagnosis */}
             {prescription.diagnoses.length > 0 && (
             <div className="avoid-break mt-6">
-                <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-500">
+                <h2 className="mb-2.5 border-b border-slate-300 pb-1.5 text-[10.5px] font-semibold uppercase tracking-[0.16em] text-slate-600">
                 Diagnosis
                 </h2>
                 <div className="flex flex-wrap gap-2">
@@ -438,46 +452,46 @@
             {/* Medicines */}
             {prescription.medicines.length > 0 && (
             <div className="avoid-break mt-8">
-                <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-500">
+                <h2 className="mb-2.5 border-b border-slate-300 pb-1.5 text-[10.5px] font-semibold uppercase tracking-[0.16em] text-slate-600">
                 Medicines
                 </h2>
 
-                <table className="w-full border-collapse overflow-hidden rounded-lg border border-slate-200 text-sm">
-                <thead className="bg-slate-100">
+                <table className="w-full border-collapse border border-slate-200 text-[12.5px]">
+                <thead className="bg-slate-50 [print-color-adjust:exact]">
                     <tr>
-                    <th className="border border-slate-200 p-2 text-left">
+                    <th className="border border-slate-200 px-3 py-2 text-left text-[10px] font-semibold uppercase tracking-[0.1em] text-slate-500">
                         Medicine
                     </th>
-                    <th className="border border-slate-200 p-2 text-left">
+                    <th className="border border-slate-200 px-3 py-2 text-left text-[10px] font-semibold uppercase tracking-[0.1em] text-slate-500">
                         Dosage
                     </th>
-                    <th className="border border-slate-200 p-2 text-left">
+                    <th className="border border-slate-200 px-3 py-2 text-left text-[10px] font-semibold uppercase tracking-[0.1em] text-slate-500">
                         Frequency
                     </th>
-                    <th className="border border-slate-200 p-2 text-left">
+                    <th className="border border-slate-200 px-3 py-2 text-left text-[10px] font-semibold uppercase tracking-[0.1em] text-slate-500">
                         Duration
                     </th>
-                    <th className="border border-slate-200 p-2 text-left">
+                    <th className="border border-slate-200 px-3 py-2 text-left text-[10px] font-semibold uppercase tracking-[0.1em] text-slate-500">
                         Instructions
                     </th>
                     </tr>
                 </thead>
                 <tbody>
                     {prescription.medicines.map((m, index) => (
-                    <tr key={index} className="odd:bg-white even:bg-slate-50">
-                        <td className="border border-slate-200 p-2">
+                    <tr key={index} className="avoid-break align-top">
+                        <td className="border border-slate-200 px-3 py-2.5">
                         {m.medicineName}
                         </td>
-                        <td className="border border-slate-200 p-2">
+                        <td className="border border-slate-200 px-3 py-2.5">
                         {m.dosage}
                         </td>
-                        <td className="border border-slate-200 p-2">
+                        <td className="border border-slate-200 px-3 py-2.5">
                         {m.frequency}
                         </td>
-                        <td className="border border-slate-200 p-2">
+                        <td className="border border-slate-200 px-3 py-2.5">
                         {m.duration}
                         </td>
-                        <td className="border border-slate-200 p-2">
+                        <td className="border border-slate-200 px-3 py-2.5">
                         {m.instructions}
                         </td>
                     </tr>
@@ -490,7 +504,7 @@
             {/* Advice */}
             {prescription.advice && (
             <div className="avoid-break mt-8">
-                <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-500">
+                <h2 className="mb-2.5 border-b border-slate-300 pb-1.5 text-[10.5px] font-semibold uppercase tracking-[0.16em] text-slate-600">
                 Advice
                 </h2>
                 <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
@@ -502,7 +516,7 @@
             {/* Follow-up */}
             {prescription.followUpDate && (
             <div className="avoid-break mt-6">
-                <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-500">
+                <h2 className="mb-2.5 border-b border-slate-300 pb-1.5 text-[10.5px] font-semibold uppercase tracking-[0.16em] text-slate-600">
                 Follow-up Date
                 </h2>
                 <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">

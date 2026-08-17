@@ -191,16 +191,47 @@
                 />
             </div>
 
-            {medicalHistoryLabels
-                .filter(({ key }) => appointmentDetails[key])
-                .map(({ key, label }) => (
-                <span
-                    key={key}
-                    className="h-fit rounded-full bg-red-50 px-2.5 py-1 text-[11px] font-semibold text-red-700"
-                >
-                    {label}
-                </span>
-                ))}
+            <div className="hidden h-9 w-px bg-slate-200 sm:block" />
+
+            {/* Medical history is recorded by the front desk at registration,
+                but the doctor is the one who can confirm or correct it, so
+                these are editable here rather than read-only chips. The value
+                lives on appointmentDetails and is sent with the consultation,
+                which is where the prescription reads it back from. */}
+            <div className="w-full">
+                <p className="mb-1 text-[10px] font-medium uppercase tracking-wide text-slate-400">
+                Medical History
+                </p>
+
+                <div className="flex flex-wrap gap-x-4 gap-y-1.5">
+                {medicalHistoryLabels.map(({ key, label }) => {
+                    const checked = !!appointmentDetails[key];
+
+                    return (
+                    <label
+                        key={key}
+                        className={`flex cursor-pointer select-none items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-medium transition-colors ${
+                        checked
+                            ? "border-red-200 bg-red-50 text-red-700"
+                            : "border-slate-200 bg-white text-slate-500 hover:bg-slate-50"
+                        }`}
+                    >
+                        <input
+                        type="checkbox"
+                        checked={checked}
+                        onChange={(e) =>
+                            setAppointmentDetails((prev) =>
+                            prev ? { ...prev, [key]: e.target.checked } : prev
+                            )
+                        }
+                        className="h-3.5 w-3.5 cursor-pointer accent-red-600"
+                        />
+                        {label}
+                    </label>
+                    );
+                })}
+                </div>
+            </div>
             </div>
         ) : (
             <p className="text-sm text-slate-400">Select an appointment to view details</p>

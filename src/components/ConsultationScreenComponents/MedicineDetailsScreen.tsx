@@ -31,7 +31,14 @@
     med: MedicineDto;
     index: number;
     onRemove: (index: number) => void;
+    onChange: (index: number, patch: Partial<MedicineDto>) => void;
     }
+
+    // Shared styling for the in-row editors. Borderless until focused or
+    // hovered so the table still reads as a list of prescribed medicines
+    // rather than a wall of form fields.
+    const cellInputClass =
+    "w-full rounded border border-transparent bg-transparent px-1.5 py-1 text-sm hover:border-slate-200 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500";
 
     export const FREQUENCIES = [
     "1-0-0", // Morning
@@ -71,7 +78,7 @@ export const INSTRUCTIONS = [
     "At Bedtime",
 ];
 
-    const SortableMedicineRow = ({ id, med, index, onRemove }: SortableMedicineRowProps) => {
+    const SortableMedicineRow = ({ id, med, index, onRemove, onChange }: SortableMedicineRowProps) => {
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
         useSortable({ id });
 
@@ -95,11 +102,54 @@ export const INSTRUCTIONS = [
             <GripVertical className="h-4 w-4" />
             </button>
         </td>
-        <td className="p-1.5">{med.medicineName}</td>
-        <td className="p-1.5">{med.dosage}</td>
-        <td className="p-1.5">{med.frequency}</td>
-        <td className="p-1.5">{med.duration}</td>
-        <td className="p-1.5">{med.instructions}</td>
+        <td className="p-1.5">
+            <input
+            value={med.medicineName}
+            onChange={(e) => onChange(index, { medicineName: e.target.value })}
+            className={`${cellInputClass} font-medium`}
+            aria-label={`Medicine name, row ${index + 1}`}
+            />
+        </td>
+        <td className="p-1.5">
+            <input
+            list="dosage-options"
+            value={med.dosage ?? ""}
+            onChange={(e) => onChange(index, { dosage: e.target.value })}
+            placeholder="—"
+            className={cellInputClass}
+            aria-label={`Dosage, row ${index + 1}`}
+            />
+        </td>
+        <td className="p-1.5">
+            <input
+            list="frequency-options"
+            value={med.frequency ?? ""}
+            onChange={(e) => onChange(index, { frequency: e.target.value })}
+            placeholder="—"
+            className={cellInputClass}
+            aria-label={`Frequency, row ${index + 1}`}
+            />
+        </td>
+        <td className="p-1.5">
+            <input
+            list="duration-options"
+            value={med.duration ?? ""}
+            onChange={(e) => onChange(index, { duration: e.target.value })}
+            placeholder="—"
+            className={cellInputClass}
+            aria-label={`Duration, row ${index + 1}`}
+            />
+        </td>
+        <td className="p-1.5">
+            <input
+            list="instruction-options"
+            value={med.instructions ?? ""}
+            onChange={(e) => onChange(index, { instructions: e.target.value })}
+            placeholder="—"
+            className={cellInputClass}
+            aria-label={`Instructions, row ${index + 1}`}
+            />
+        </td>
         <td className="p-1.5 text-center">
             <button
             className="text-xs font-medium text-red-600 hover:text-red-700"
@@ -134,8 +184,8 @@ export const INSTRUCTIONS = [
         try {
         const response = await searchMedicines(value);
         setMedicineSuggestions(response);
-        } catch (error: any) {
-        toast.error(error);
+        } catch (error) {
+        toast.error(error instanceof Error ? error.message : "Could not search medicines.");
         }
     };
 
@@ -161,6 +211,12 @@ export const INSTRUCTIONS = [
 
     const removeMedicine = (index: number) => {
         setMedicines((prev) => prev.filter((_, i) => i !== index));
+    };
+
+    const updateMedicine = (index: number, patch: Partial<MedicineDto>) => {
+        setMedicines((prev) =>
+        prev.map((med, i) => (i === index ? { ...med, ...patch } : med))
+        );
     };
 
     const handleDragEnd = (event: DragEndEvent) => {
@@ -328,6 +384,7 @@ export const INSTRUCTIONS = [
                         med={med}
                         index={index}
                         onRemove={removeMedicine}
+                        onChange={updateMedicine}
                         />
                     ))}
                     </tbody>

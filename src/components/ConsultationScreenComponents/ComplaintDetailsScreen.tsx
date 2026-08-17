@@ -29,8 +29,8 @@ if (value.trim().length < 2) {
 try {
     const response = await searchComplaints(value);
     setSuggestions(response);
-} catch (error: any) {
-    toast.error(error.message || error);
+} catch (error) {
+    toast.error(error instanceof Error ? error.message : "Could not search complaints.");
 }
 };
 
@@ -75,6 +75,10 @@ return (
             addComplaint(complaint);
         }
         }}
+        // Commit pending text on focus loss so it is not lost when Enter is
+        // never pressed. Suggestion clicks preventDefault on mousedown, so
+        // focus stays and they cannot double-add.
+        onBlur={() => addComplaint(complaint)}
         className="h-8 w-full rounded-md border border-slate-300 px-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
     />
 

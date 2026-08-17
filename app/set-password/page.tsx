@@ -160,6 +160,8 @@ const SetPasswordPageContent = () => {
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
+                data-no-capitalize
+                autoComplete="new-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="At least 8 characters"
@@ -188,6 +190,8 @@ const SetPasswordPageContent = () => {
             <div className="relative">
               <input
                 type={showConfirmPassword ? "text" : "password"}
+                data-no-capitalize
+                autoComplete="new-password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Re-enter your password"

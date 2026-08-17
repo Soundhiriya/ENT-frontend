@@ -51,7 +51,7 @@ const menuItems: MenuItem[] = [
 
     icon: HeartPulse,
 
-    roles: ["DOCTOR", "NURSE", "ADMIN"],
+    roles: ["DOCTOR", "NURSE", "RECEPTIONIST", "ADMIN"],
 
   },
 
@@ -83,8 +83,23 @@ const menuItems: MenuItem[] = [
         router.push(path);
         setSidebarOpen(false);
     };
-    const visibleMenuItems = menuItems.filter(
-    (item) => user && item.roles.includes(user.role)
+    const visibleMenuItems = menuItems
+    .filter((item) => user && item.roles.includes(user.role))
+    // The front-desk screen is shared by nurses and receptionists, so it
+    // takes its label from who's looking at it. Doctors and admins see both
+    // kinds of staff use it, so they get the combined label.
+    .map((item) =>
+        item.path === "/nurse"
+        ? {
+            ...item,
+            name:
+                user?.role === "RECEPTIONIST"
+                ? "Reception"
+                : user?.role === "NURSE"
+                ? "Nurse"
+                : "Nurse / Reception",
+            }
+        : item
     );
 
     const handleLogout = async () => {
@@ -109,14 +124,14 @@ const menuItems: MenuItem[] = [
         {/* Mobile Overlay */}
         {sidebarOpen && (
             <div
-            className="fixed inset-0 z-40 bg-black/40 md:hidden"
+            className="fixed inset-0 z-40 bg-black/40 md:hidden print:hidden"
             onClick={() => setSidebarOpen(false)}
             />
         )}
 
         <aside
             className={`
-            fixed left-0 top-0 z-50
+            fixed left-0 top-0 z-50 print:hidden
             flex h-screen ${width} flex-col
             border-r border-[#E5E7EB] bg-white
             transition-[width,transform] duration-150

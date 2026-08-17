@@ -4,6 +4,19 @@
   --brand-primary-dark: #1d4ed8;
 }
 
+/* Prescription document typography.
+   Registered in the Tailwind `--font-*` namespace so they generate the
+   `font-rx-serif` / `font-rx-sans` utilities. Scoped names on purpose — the
+   rest of the app keeps Geist; only the prescription opts in. The *-src
+   variables are injected on <html> by next/font in app/layout.tsx, with a
+   system fallback chain in case the webfont hasn't loaded (e.g. printing
+   straight after a cold load). */
+@theme {
+  --font-rx-serif: var(--font-rx-serif-src), Georgia, "Times New Roman", serif;
+  --font-rx-sans: var(--font-rx-sans-src), "Inter", ui-sans-serif, system-ui,
+    -apple-system, "Segoe UI", sans-serif;
+}
+
 
 @media print {
 

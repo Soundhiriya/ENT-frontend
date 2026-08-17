@@ -9,6 +9,7 @@ function dashboardPathForRole(role?: string) {
     case "DOCTOR":
       return "/doctor";
     case "NURSE":
+    case "RECEPTIONIST":
       return "/nurse";
     case "ADMIN":
       return "/doctor";

@@ -45,7 +45,7 @@ import { useRouter } from "next/navigation";
     const [charges, setCharges] = useState<ChargeDto[]>([]);
     const [youtubeVideos, setYoutubeVideos] = useState<YoutubeVideoDto[]>([]);
 
-    const [consultationFee, setConsultationFee] = useState("");
+    const [consultationFee, setConsultationFee] = useState("250");
     const [advice, setAdvice] = useState("");
     const [followUpDate, setFollowUpDate] = useState("");
     const [endoscopyImages, setEndoscopyImages] = useState<File[]>([]);
@@ -77,7 +77,8 @@ import { useRouter } from "next/navigation";
         return;
         }
 
-        if (!consultationFee.trim() || Number(consultationFee) < 0) {
+        const fee = Number(consultationFee);
+        if (!consultationFee.trim() || Number.isNaN(fee) || fee < 0) {
         toast.error("Please enter a valid consultation fee.");
         return;
         }
@@ -94,6 +95,15 @@ import { useRouter } from "next/navigation";
         weight: appointmentDetails?.weight,
         height: appointmentDetails?.height,
         temperature: appointmentDetails?.temperature,
+        // Coerced to a definite boolean: an untick has to travel as `false`,
+        // not undefined, or the backend's null-guard would keep the old value
+        // and the box would silently re-tick itself on the prescription.
+        diabetes: !!appointmentDetails?.diabetes,
+        hypertension: !!appointmentDetails?.hypertension,
+        tuberculosis: !!appointmentDetails?.tuberculosis,
+        bronchialAsthma: !!appointmentDetails?.bronchialAsthma,
+        epilepsy: !!appointmentDetails?.epilepsy,
+        antenatal: !!appointmentDetails?.antenatal,
         consultationFee: Number(consultationFee),
         advice,
         followUpDate: followUpDate || undefined,
@@ -125,8 +135,10 @@ import { useRouter } from "next/navigation";
         toast.success(response.message);
         setShowPreview(false);
         router.push(`/doctor/prescription/${response.consultationId}`);
-        } catch (error: any) {
-        toast.error(error);
+        } catch (error) {
+        // Pass the message, never the Error itself — sonner renders its
+        // argument as a React child, and an object child throws.
+        toast.error(error instanceof Error ? error.message : "Could not save the consultation.");
         } finally {
         setSaving(false);
         }

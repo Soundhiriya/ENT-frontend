@@ -52,6 +52,9 @@
                 addFinding();
             }
             }}
+            // Commit pending text on focus loss so a finding is not lost when
+            // Enter is never pressed.
+            onBlur={addFinding}
         />
 
         {findings.length > 0 && (

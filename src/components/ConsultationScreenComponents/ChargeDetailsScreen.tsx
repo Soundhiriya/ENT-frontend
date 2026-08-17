@@ -82,6 +82,10 @@ const ChargeDetailsScreen = ({
                             addCharge();
                         }
                     }}
+                    // A charge needs both name and amount, so addCharge no-ops
+                    // until the pair is filled; blurring either field then
+                    // commits it without needing Enter.
+                    onBlur={addCharge}
                 />
 
                 <input
@@ -98,6 +102,7 @@ const ChargeDetailsScreen = ({
                             addCharge();
                         }
                     }}
+                    onBlur={addCharge}
                 />
 
                 <button

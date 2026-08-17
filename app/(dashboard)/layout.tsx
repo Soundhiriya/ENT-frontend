@@ -18,7 +18,9 @@ return (
     />
 
     <main
-    className={`flex-1 min-w-0 overflow-x-hidden transition-all duration-150 ${
+    // print:ml-0 — the sidebar is hidden when printing, so its gutter must
+    // collapse too, otherwise printed content sits off-centre on the sheet.
+    className={`flex-1 min-w-0 overflow-x-hidden transition-all duration-150 print:ml-0 ${
         collapsed ? "ml-[72px]" : "ml-[220px]"
     }`}
     >

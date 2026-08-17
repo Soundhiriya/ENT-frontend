@@ -17,6 +17,7 @@ const ROLE_BADGE_STYLES: Record<string, string> = {
     ADMIN: "border-purple-200 bg-purple-50 text-purple-700",
     DOCTOR: "border-blue-200 bg-blue-50 text-blue-700",
     NURSE: "border-emerald-200 bg-emerald-50 text-emerald-700",
+    RECEPTIONIST: "border-emerald-200 bg-emerald-50 text-emerald-700",
 };
 
 export default function ManageUsersModal({ open, onClose }: Props) {

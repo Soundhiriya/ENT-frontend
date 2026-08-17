@@ -62,6 +62,9 @@ export default function DynamicFindingListEditor({
             addItem();
           }
         }}
+        // Commit pending text on focus loss so an entry is not lost when Enter
+        // is never pressed.
+        onBlur={addItem}
       />
 
       {items.length > 0 && (

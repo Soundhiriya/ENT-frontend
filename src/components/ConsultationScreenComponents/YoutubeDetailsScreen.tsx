@@ -103,6 +103,7 @@ const YoutubeDetailsScreen = ({ youtubeVideos, setYoutubeVideos }: YoutubeDetail
         <div className="flex gap-2">
           <input
             type="text"
+            data-no-capitalize
             value={customUrl}
             onChange={(e) => setCustomUrl(e.target.value)}
             placeholder="Paste custom YouTube link"
@@ -112,6 +113,9 @@ const YoutubeDetailsScreen = ({ youtubeVideos, setYoutubeVideos }: YoutubeDetail
                 handleAddCustom();
               }
             }}
+            // Commit the pasted link on focus loss so it is not lost when
+            // Enter is never pressed.
+            onBlur={handleAddCustom}
             className="h-9 flex-1 rounded-md border border-slate-300 px-2 text-sm focus:border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500"
           />
 

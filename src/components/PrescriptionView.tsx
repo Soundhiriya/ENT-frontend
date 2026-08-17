@@ -2,6 +2,15 @@
 // Pure presentational renderer for a prescription — shared by the real
 // post-save prescription page and the pre-save confirmation preview, so
 // what the doctor confirms is exactly what they'll get afterwards.
+//
+// Styling note: this renders a clinical document, not an app screen. Body
+// copy uses `font-rx-sans` (IBM Plex Sans) and the letterhead/headings use
+// `font-rx-serif` (Merriweather) — both declared in app/globals.css and fed
+// by next/font in app/layout.tsx. Every section keeps `break-inside-avoid`
+// so it never splits across a page break, and the root deliberately stays
+// `mx-auto max-w-4xl` with no height constraints so the parent page's
+// `@page` margin — which reserves the pre-printed letterhead bands on every
+// page — governs the printed geometry unopposed.
 
 "use client";
 
@@ -12,12 +21,36 @@ interface PrescriptionViewProps {
   data: PrescriptionViewData;
   prescriptionUrl?: string;
   onPrint?: () => void;
+  // Billing is deliberately off by default: neither the doctor's printed
+  // prescription nor the patient-facing e-prescription should carry fee
+  // information. Kept as an opt-in rather than deleted so an internal
+  // admin/billing screen can reuse this renderer with the amounts shown.
+  showBilling?: boolean;
+}
+
+// Small caps rule used for every section title, so the document reads with a
+// single consistent hierarchy instead of ad-hoc bold text.
+function SectionHeading({ children }: { children: React.ReactNode }) {
+  return (
+    <h2 className="mb-1.5 border-b border-slate-300 pb-1 font-rx-sans text-[10.5px] font-semibold uppercase tracking-[0.16em] text-slate-600">
+      {children}
+    </h2>
+  );
+}
+
+function FieldLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="text-[10px] font-semibold uppercase tracking-[0.1em] text-slate-500">
+      {children}
+    </span>
+  );
 }
 
 export default function PrescriptionView({
   data,
   prescriptionUrl,
   onPrint,
+  showBilling = false,
 }: PrescriptionViewProps) {
   const hasVitals =
     !!data.bp ||
@@ -42,125 +75,169 @@ export default function PrescriptionView({
     (data.consultationFee ?? 0) +
     data.charges.reduce((sum, charge) => sum + charge.amount, 0);
 
+  // The QR only ever points at endoscopy images / YouTube links, so there is
+  // nothing to scan for when neither is attached — hide the whole slot in
+  // that case rather than printing a dead code.
+  const hasMedia =
+    (data.endoscopyImages?.length ?? 0) > 0 ||
+    (data.youtubeVideos?.length ?? 0) > 0;
+
   return (
-    <div className="mx-auto max-w-4xl rounded-lg bg-white p-8 shadow-lg print:max-w-full print:rounded-none print:p-0 print:shadow-none">
+    <div className="mx-auto max-w-4xl rounded-lg border border-slate-200 bg-white p-8 font-rx-sans text-[13px] leading-relaxed text-slate-800 shadow-lg print:max-w-full print:rounded-none print:border-0 print:p-0 print:shadow-none">
 
-      {/* Header */}
+      {/* Letterhead — heavy rule under the hospital name, hairline beneath it,
+          the way a printed prescription pad is set. */}
 
-      <div className="border-b pb-5">
-        <h1 className="text-3xl font-bold">
-          {data.hospitalName}
-        </h1>
+      <div className="flex break-inside-avoid items-start justify-between gap-2 border-b-2 border-slate-800 pb-3">
+        <div className="min-w-0">
+          <h1 className="font-rx-serif text-[28px] font-bold leading-tight tracking-tight text-slate-900">
+            {data.hospitalName}
+          </h1>
 
-        <p className="text-sm text-slate-500">
-          ENT Specialist
-        </p>
+          <div className="mt-1.5 flex flex-wrap items-baseline gap-x-3 gap-y-0.5">
+            <p className="font-rx-serif text-[13px] font-semibold tracking-wide text-slate-700">
+              Dr.G.SubaJothiKumar MBBS.,MS(ENT)
+            </p>
+
+            <span className="text-slate-300">|</span>
+
+            <p className="text-[11px] uppercase tracking-[0.12em] text-slate-500">
+              ENT Specialist
+            </p>
+
+            <span className="text-slate-300">|</span>
+
+            <p className="text-[11px] uppercase tracking-[0.12em] text-slate-500">
+              Reg. No. 127855
+            </p>
+          </div>
+        </div>
+
+        {/* QR sits in the letterhead's dead space to the right of the
+            credentials line rather than in a footer of its own, so it costs
+            no extra vertical height — the block is already as tall as the
+            hospital name. Still gated on hasMedia: nothing to scan for when
+            no endoscopy images or videos are attached. */}
+
+        {hasMedia && (
+          <div className="flex shrink-0 items-center gap-2">
+            {prescriptionUrl ? (
+              <>
+                {/* max-w tuned to break this onto exactly two lines at
+                    10px: "Scan for endoscopy" measures ~118px, so anything
+                    narrower spills to three lines and anything much wider
+                    steals room from the credentials line and wraps
+                    "Reg. No." onto its own row. The parent gap is kept at
+                    gap-2 for the same reason. */}
+                <p className="max-w-[118px] text-right text-[10px] uppercase leading-tight tracking-[0.06em] text-slate-500">
+                  Scan for endoscopy images &amp; videos
+                </p>
+                <QRCode value={prescriptionUrl} size={64} />
+              </>
+            ) : (
+              <div className="flex h-[64px] w-[64px] flex-col items-center justify-center rounded-sm border border-dashed border-slate-300 bg-slate-50 p-1.5 text-center text-[9px] leading-tight text-slate-400">
+                QR after saving
+              </div>
+            )}
+          </div>
+        )}
       </div>
+
+      <div className="mt-[3px] border-b border-slate-300" />
 
       {/* Patient Details */}
 
-      <div className="mt-6 grid grid-cols-2 gap-4 text-sm">
+      <div className="mt-3 grid break-inside-avoid grid-cols-2 gap-x-8 gap-y-1 pb-2.5">
 
-        <div>
+        <div className="space-y-1">
           <p>
-            <span className="font-semibold">Doctor :</span>{" "}
-            {data.doctorName}
+            <FieldLabel>Patient</FieldLabel>
+            <span className="ml-2 font-medium text-slate-900">
+              {data.patientName}
+            </span>
           </p>
 
           <p>
-            <span className="font-semibold">Patient :</span>{" "}
-            {data.patientName}
-          </p>
-
-          <p>
-            <span className="font-semibold">Phone :</span>{" "}
-            {data.phone}
+            <FieldLabel>Phone</FieldLabel>
+            <span className="ml-2 text-slate-800">{data.phone}</span>
           </p>
         </div>
 
-        <div>
-          {data.age != null && (
-            <p>
-              <span className="font-semibold">Age :</span>{" "}
-              {data.age}
-            </p>
-          )}
-
+        <div className="space-y-1">
           <p>
-            <span className="font-semibold">Gender :</span>{" "}
-            {data.gender}
+            {data.age != null && (
+              <>
+                <FieldLabel>Age</FieldLabel>
+                <span className="ml-2 mr-5 text-slate-800">{data.age}</span>
+              </>
+            )}
+            <FieldLabel>Gender</FieldLabel>
+            <span className="ml-2 text-slate-800">{data.gender}</span>
           </p>
 
           <p>
-            <span className="font-semibold">Consultation Date :</span>{" "}
-            {data.consultationDate}
+            <FieldLabel>Consultation Date</FieldLabel>
+            <span className="ml-2 text-slate-800">
+              {data.consultationDate}
+            </span>
           </p>
         </div>
       </div>
 
-      {/* Vitals */}
+      {/* Vitals — an inline run rather than a boxed grid: four numbers don't
+          earn a bordered four-column table, and the flat version costs one
+          line instead of ~15mm. */}
 
       {hasVitals && (
-        <div className="mt-8 break-inside-avoid">
+        <div className="flex break-inside-avoid flex-wrap items-baseline gap-x-6 gap-y-1 border-t border-slate-200 pt-2">
+          <FieldLabel>Vitals</FieldLabel>
 
-          <h2 className="mb-3 text-lg font-semibold">
-            Vitals
-          </h2>
+          {data.bp && (
+            <span>
+              <span className="text-slate-500">BP</span>{" "}
+              <span className="font-medium text-slate-900">{data.bp}</span>
+            </span>
+          )}
 
-          <div className="grid grid-cols-4 gap-4 rounded border p-4">
+          {data.temperature != null && (
+            <span>
+              <span className="text-slate-500">Temp</span>{" "}
+              <span className="font-medium text-slate-900">
+                {data.temperature}
+              </span>
+            </span>
+          )}
 
-            {data.bp && (
-              <div>
-                <p className="text-sm text-slate-500">BP</p>
-                <p>{data.bp}</p>
-              </div>
-            )}
+          {data.weight != null && (
+            <span>
+              <span className="text-slate-500">Weight</span>{" "}
+              <span className="font-medium text-slate-900">{data.weight}</span>
+            </span>
+          )}
 
-            {data.temperature != null && (
-              <div>
-                <p className="text-sm text-slate-500">
-                  Temperature
-                </p>
-                <p>{data.temperature}</p>
-              </div>
-            )}
-
-            {data.weight != null && (
-              <div>
-                <p className="text-sm text-slate-500">
-                  Weight
-                </p>
-                <p>{data.weight}</p>
-              </div>
-            )}
-
-            {data.height != null && (
-              <div>
-                <p className="text-sm text-slate-500">
-                  Height
-                </p>
-                <p>{data.height}</p>
-              </div>
-            )}
-
-          </div>
+          {data.height != null && (
+            <span>
+              <span className="text-slate-500">Height</span>{" "}
+              <span className="font-medium text-slate-900">{data.height}</span>
+            </span>
+          )}
         </div>
       )}
+
+      <div className="mt-2.5 border-t border-slate-200" />
 
       {/* Medical History — only conditions the front desk ticked */}
 
       {activeMedicalHistory.length > 0 && (
-        <div className="mt-8 break-inside-avoid">
+        <div className="mt-4 break-inside-avoid">
 
-          <h2 className="mb-3 text-lg font-semibold">
-            Medical History
-          </h2>
+          <SectionHeading>Medical History</SectionHeading>
 
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-1.5">
             {activeMedicalHistory.map(({ key, label }) => (
               <span
                 key={key}
-                className="rounded-full bg-red-50 px-3 py-1 text-sm font-medium text-red-700"
+                className="rounded-sm border border-red-300 bg-red-50 px-2.5 py-0.5 text-[11px] font-medium uppercase tracking-[0.06em] text-red-700 [print-color-adjust:exact]"
               >
                 {label}
               </span>
@@ -172,15 +249,13 @@ export default function PrescriptionView({
       {/* Clinical details — short list sections sit side by side instead of
           each taking a full row, so the prescription stays compact. */}
 
-      <div className="mt-8 grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
+      <div className="mt-4 grid grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-3">
 
         {data.complaints.length > 0 && (
           <div className="break-inside-avoid">
-            <h2 className="mb-3 text-lg font-semibold">
-              Chief Complaints
-            </h2>
+            <SectionHeading>Chief Complaints</SectionHeading>
 
-            <ul className="list-disc pl-6">
+            <ul className="list-disc space-y-0.5 pl-5 marker:text-slate-400">
               {data.complaints.map((item, index) => (
                 <li key={index}>{item.complaint}</li>
               ))}
@@ -190,11 +265,9 @@ export default function PrescriptionView({
 
         {data.findings.length > 0 && (
           <div className="break-inside-avoid">
-            <h2 className="mb-3 text-lg font-semibold">
-              Findings
-            </h2>
+            <SectionHeading>Findings</SectionHeading>
 
-            <ul className="list-disc pl-6">
+            <ul className="list-disc space-y-0.5 pl-5 marker:text-slate-400">
               {data.findings.map((item, index) => (
                 <li key={index}>{item.finding}</li>
               ))}
@@ -204,11 +277,9 @@ export default function PrescriptionView({
 
         {data.otoendoscopies.length > 0 && (
           <div className="break-inside-avoid">
-            <h2 className="mb-3 text-lg font-semibold">
-              Otoendoscopy
-            </h2>
+            <SectionHeading>Otoendoscopy</SectionHeading>
 
-            <ul className="list-disc pl-6">
+            <ul className="list-disc space-y-0.5 pl-5 marker:text-slate-400">
               {data.otoendoscopies.map((item, index) => (
                 <li key={index} className="whitespace-pre-wrap">
                   {item.finding}
@@ -220,11 +291,9 @@ export default function PrescriptionView({
 
         {data.diagnosticNasalEndoscopies.length > 0 && (
           <div className="break-inside-avoid">
-            <h2 className="mb-3 text-lg font-semibold">
-              Diagnostic Nasal Endoscopy
-            </h2>
+            <SectionHeading>Diagnostic Nasal Endoscopy</SectionHeading>
 
-            <ul className="list-disc pl-6">
+            <ul className="list-disc space-y-0.5 pl-5 marker:text-slate-400">
               {data.diagnosticNasalEndoscopies.map((item, index) => (
                 <li key={index} className="whitespace-pre-wrap">
                   {item.finding}
@@ -236,11 +305,9 @@ export default function PrescriptionView({
 
         {data.videoLaryngoscopies.length > 0 && (
           <div className="break-inside-avoid">
-            <h2 className="mb-3 text-lg font-semibold">
-              Video Laryngoscopy
-            </h2>
+            <SectionHeading>Video Laryngoscopy</SectionHeading>
 
-            <ul className="list-disc pl-6">
+            <ul className="list-disc space-y-0.5 pl-5 marker:text-slate-400">
               {data.videoLaryngoscopies.map((item, index) => (
                 <li key={index} className="whitespace-pre-wrap">
                   {item.finding}
@@ -252,13 +319,13 @@ export default function PrescriptionView({
 
         {data.diagnoses.length > 0 && (
           <div className="break-inside-avoid">
-            <h2 className="mb-3 text-lg font-semibold">
-              Diagnosis
-            </h2>
+            <SectionHeading>Diagnosis</SectionHeading>
 
-            <ul className="list-disc pl-6">
+            <ul className="list-disc space-y-0.5 pl-5 marker:text-slate-400">
               {data.diagnoses.map((item, index) => (
-                <li key={index}>{item.diagnosis}</li>
+                <li key={index} className="font-medium text-slate-900">
+                  {item.diagnosis}
+                </li>
               ))}
             </ul>
           </div>
@@ -268,31 +335,55 @@ export default function PrescriptionView({
 
       {/* Medicines */}
 
-      {data.medicines.length > 0 && (
-        <div className="mt-8 break-inside-avoid">
-          <h2 className="mb-3 text-lg font-semibold">
-            Medicines
-          </h2>
+      {/* Medicines — deliberately NOT break-inside-avoid on the wrapper. A
+          long table that refuses to split gets shunted whole onto the next
+          page, stranding the remaining space on this one; the rows carry
+          break-inside-avoid individually so a row never splits mid-cell, and
+          the header repeats via <thead> if the table does span pages. */}
 
-          <table className="w-full border">
-            <thead className="bg-slate-100">
+      {data.medicines.length > 0 && (
+        <div className="mt-4">
+          <SectionHeading>Medicines</SectionHeading>
+
+          <table className="w-full border-collapse border border-slate-200 text-[12.5px]">
+            <thead className="bg-slate-50 [print-color-adjust:exact]">
               <tr>
-                <th className="border p-2 text-left">Medicine</th>
-                <th className="border p-2">Dosage</th>
-                <th className="border p-2">Frequency</th>
-                <th className="border p-2">Duration</th>
-                <th className="border p-2">Instructions</th>
+                <th className="border border-slate-200 px-3 py-1.5 text-left text-[10px] font-semibold uppercase tracking-[0.1em] text-slate-500">
+                  Medicine
+                </th>
+                <th className="border border-slate-200 px-3 py-1.5 text-left text-[10px] font-semibold uppercase tracking-[0.1em] text-slate-500">
+                  Dosage
+                </th>
+                <th className="border border-slate-200 px-3 py-1.5 text-left text-[10px] font-semibold uppercase tracking-[0.1em] text-slate-500">
+                  Frequency
+                </th>
+                <th className="border border-slate-200 px-3 py-1.5 text-left text-[10px] font-semibold uppercase tracking-[0.1em] text-slate-500">
+                  Duration
+                </th>
+                <th className="border border-slate-200 px-3 py-1.5 text-left text-[10px] font-semibold uppercase tracking-[0.1em] text-slate-500">
+                  Instructions
+                </th>
               </tr>
             </thead>
 
             <tbody>
               {data.medicines.map((medicine, index) => (
-                <tr key={index}>
-                  <td className="border p-2">{medicine.medicineName}</td>
-                  <td className="border p-2">{medicine.dosage}</td>
-                  <td className="border p-2">{medicine.frequency}</td>
-                  <td className="border p-2">{medicine.duration}</td>
-                  <td className="border p-2">{medicine.instructions}</td>
+                <tr key={index} className="break-inside-avoid align-top">
+                  <td className="border border-slate-200 px-3 py-1.5 font-medium text-slate-900">
+                    {medicine.medicineName}
+                  </td>
+                  <td className="border border-slate-200 px-3 py-1.5">
+                    {medicine.dosage}
+                  </td>
+                  <td className="border border-slate-200 px-3 py-1.5">
+                    {medicine.frequency}
+                  </td>
+                  <td className="border border-slate-200 px-3 py-1.5">
+                    {medicine.duration}
+                  </td>
+                  <td className="border border-slate-200 px-3 py-1.5">
+                    {medicine.instructions}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -300,65 +391,65 @@ export default function PrescriptionView({
         </div>
       )}
 
-      {/* Billing */}
+      {/* Billing — opt-in only (see showBilling above). */}
 
-      <div className="mt-8 break-inside-avoid">
-        <h2 className="mb-3 text-lg font-semibold">
-          Billing
-        </h2>
+      {showBilling && (
+        <div className="mt-4 break-inside-avoid">
+          <SectionHeading>Billing</SectionHeading>
 
-        <table className="w-full border">
-          <tbody>
-            <tr>
-              <td className="border p-2">Consultation Fee</td>
-              <td className="border p-2 text-right">
-                ₹{data.consultationFee}
-              </td>
-            </tr>
-
-            {data.charges.map((charge, index) => (
-              <tr key={index}>
-                <td className="border p-2">{charge.label}</td>
-                <td className="border p-2 text-right">
-                  ₹{charge.amount}
+          <table className="w-full border-collapse border border-slate-200 text-[12.5px]">
+            <tbody>
+              <tr>
+                <td className="border border-slate-200 px-3 py-1.5">
+                  Consultation Fee
+                </td>
+                <td className="border border-slate-200 px-3 py-1.5 text-right tabular-nums">
+                  ₹{data.consultationFee}
                 </td>
               </tr>
-            ))}
 
-            <tr>
-              <td className="border p-2 font-semibold">Total</td>
-              <td className="border p-2 text-right font-semibold">
-                ₹{billingTotal}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+              {data.charges.map((charge, index) => (
+                <tr key={index}>
+                  <td className="border border-slate-200 px-3 py-1.5">
+                    {charge.label}
+                  </td>
+                  <td className="border border-slate-200 px-3 py-1.5 text-right tabular-nums">
+                    ₹{charge.amount}
+                  </td>
+                </tr>
+              ))}
+
+              <tr className="bg-slate-50 [print-color-adjust:exact]">
+                <td className="border border-slate-200 px-3 py-1.5 font-semibold text-slate-900">
+                  Total
+                </td>
+                <td className="border border-slate-200 px-3 py-1.5 text-right font-semibold tabular-nums text-slate-900">
+                  ₹{billingTotal}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      )}
 
       {/* Advice & Follow-up — side by side */}
 
       {(data.advice?.trim() || data.followUpDate) && (
-        <div className="mt-8 grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
+        <div className="mt-4 grid grid-cols-1 gap-x-8 gap-y-3 sm:grid-cols-2">
 
           {data.advice?.trim() && (
             <div className="break-inside-avoid">
-              <h2 className="mb-2 text-lg font-semibold">
-                Advice
-              </h2>
+              <SectionHeading>Advice</SectionHeading>
 
-              <div className="rounded border p-4">
-                {data.advice}
-              </div>
+              <div className="whitespace-pre-wrap">{data.advice}</div>
             </div>
           )}
 
           {data.followUpDate && (
             <div className="break-inside-avoid">
-              <h2 className="mb-2 text-lg font-semibold">
-                Follow-up Date
-              </h2>
+              <SectionHeading>Follow-up Date</SectionHeading>
 
-              <div className="rounded border p-4">
+              <div className="font-medium text-slate-900">
                 {data.followUpDate}
               </div>
             </div>
@@ -367,33 +458,20 @@ export default function PrescriptionView({
         </div>
       )}
 
-      {/* Footer */}
+      {/* Screen-only action row. print:hidden on the wrapper, not just the
+          button — otherwise the rule and its margins still consume ~8mm of
+          printed height around an invisible control. */}
 
-      <div className="mt-12 flex items-end justify-between border-t pt-6 break-inside-avoid">
-        <div className="flex flex-col items-center gap-2">
-          {prescriptionUrl ? (
-            <>
-              <QRCode value={prescriptionUrl} size={120} />
-              <p className="text-center text-xs text-slate-500">
-                Scan to view Endoscopy images and youtube links.
-              </p>
-            </>
-          ) : (
-            <div className="flex h-[120px] w-[120px] flex-col items-center justify-center rounded border border-dashed border-slate-300 bg-slate-50 p-2 text-center text-[11px] text-slate-400">
-              QR code will be generated after saving
-            </div>
-          )}
-        </div>
-
-        {onPrint && (
+      {onPrint && (
+        <div className="mt-5 flex justify-end border-t border-slate-300 pt-3 print:hidden">
           <button
             onClick={onPrint}
-            className="rounded bg-blue-600 px-6 py-2 text-white print:hidden"
+            className="rounded-sm bg-slate-800 px-6 py-2 text-[12px] font-medium uppercase tracking-[0.1em] text-white transition-colors hover:bg-slate-900"
           >
             Print Prescription
           </button>
-        )}
-      </div>
+        </div>
+      )}
 
     </div>
   );

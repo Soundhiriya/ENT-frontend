@@ -14,7 +14,7 @@ interface Props {
     onSuccess: () => void;
 }
 
-const ROLES: Role[] = ["ADMIN", "DOCTOR", "NURSE"];
+const ROLES: Role[] = ["ADMIN", "DOCTOR", "NURSE", "RECEPTIONIST"];
 
 export default function EditUserModal({ open, user, onClose, onSuccess }: Props) {
     const [loading, setLoading] = useState(false);

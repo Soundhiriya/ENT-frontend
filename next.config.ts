@@ -7,9 +7,14 @@ import type { NextConfig } from "next";
 // since presigned endoscopy image URLs are now served directly from R2.
 const apiOrigin = process.env.NEXT_PUBLIC_API_URL || "";
 
+// React's development build uses eval() to reconstruct call stacks across the
+// server/client boundary. Production React never does, so 'unsafe-eval' is
+// added in dev only and the deployed CSP stays strict.
+const isDev = process.env.NODE_ENV !== "production";
+
 const contentSecurityPolicy = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline'",
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline'",
   `img-src 'self' data: blob: https://*.r2.dev https://*.r2.cloudflarestorage.com`,
   `connect-src 'self' ${apiOrigin}`.trim(),
@@ -35,7 +40,9 @@ const nextConfig: NextConfig = {
           },
           {
             key: "Permissions-Policy",
-            value: "camera=(), microphone=(), geolocation=()",
+            // camera=(self) — endoscopy capture needs getUserMedia from our own
+            // origin; an empty allowlist blocks it before the user is prompted.
+            value: "camera=(self), microphone=(), geolocation=()",
           },
         ],
       },

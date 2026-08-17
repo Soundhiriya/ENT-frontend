@@ -39,10 +39,14 @@ export default function LoginScreen() {
       await login({ email, password });
       const me: AuthMe = await getMe();
       loginUser(me);
-      if(me?.role == "DOCTOR" || me?.role == "ADMIN"){
+      // Listed explicitly rather than relying on the else branch, so a role
+      // added later doesn't silently inherit the front-desk landing page.
+      if (me?.role === "DOCTOR" || me?.role === "ADMIN") {
           router.replace("/doctor");
-      }else{
-        router.replace("/nurse")
+      } else if (me?.role === "NURSE" || me?.role === "RECEPTIONIST") {
+          router.replace("/nurse");
+      } else {
+          router.replace("/");
       }
     } catch (err: any) {
       if (err?.status === 429 && err?.retryAfterSeconds) {
@@ -148,6 +152,7 @@ export default function LoginScreen() {
                   <input
                     id="password"
                     type={showPassword ? "text" : "password"}
+                    data-no-capitalize
                     autoComplete="current-password"
                     required
                     placeholder="Enter password"

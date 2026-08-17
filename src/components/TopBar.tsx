@@ -8,7 +8,7 @@ export default function TopBar() {
   if (!user) return null;
 
   return (
-    <div className="flex h-12 items-center justify-end border-b border-[#E5E7EB] bg-white px-4 sm:px-6">
+    <div className="flex h-12 items-center justify-end border-b border-[#E5E7EB] bg-white px-4 sm:px-6 print:hidden">
       <div className="flex items-center gap-2.5">
         <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[var(--brand-primary)] text-xs font-bold text-white">
           {user.name.charAt(0).toUpperCase()}
