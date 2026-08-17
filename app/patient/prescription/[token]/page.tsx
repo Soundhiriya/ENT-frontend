@@ -527,7 +527,7 @@
 
             {/* Footer */}
             <div className="avoid-break mt-10 border-t border-slate-200 pt-4 text-center text-xs text-slate-400">
-            This is a digitally generated prescription from Guru ENT Clinic.
+            This is a digitally generated prescription from Dr. G. SubaJothiKumar, MBBS., MS(ENT) — ENT Specialist.
             </div>
         </div>
         </div>

@@ -95,7 +95,7 @@ return (
     <div className="mb-6 flex items-center justify-between">
         <div>
         <h2 className="text-xl font-bold text-slate-800">Register Patient</h2>
-        <p className="text-xs text-slate-400">Guru ENT Clinic · new patient intake</p>
+        <p className="text-xs text-slate-400">Dr. G. SubaJothiKumar · new patient intake</p>
         </div>
 
         <button

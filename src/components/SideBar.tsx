@@ -1,6 +1,7 @@
     "use client";
 
     import { useState } from "react";
+    import Image from "next/image";
     import { useRouter, usePathname } from "next/navigation";
     import {
     Stethoscope,
@@ -141,17 +142,21 @@ const menuItems: MenuItem[] = [
         >
             {/* Logo */}
             <div className="flex h-16 items-center border-b border-[#E5E7EB] px-3">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-[var(--brand-primary)] text-sm font-bold text-white">
-                G
-            </div>
+            <Image
+                src="/logo.png"
+                alt="Gift a Smile"
+                width={570}
+                height={579}
+                className="h-9 w-9 shrink-0 object-contain"
+            />
 
             {!collapsed && (
                 <div className="ml-2.5 overflow-hidden">
                 <p className="truncate text-sm font-bold text-slate-800">
-                    Guru ENT Clinic
+                    Dr. G. SubaJothiKumar
                 </p>
                 <p className="truncate text-[11px] text-slate-400">
-                    Management System
+                    MBBS., MS(ENT) · ENT Specialist
                 </p>
                 </div>
             )}
