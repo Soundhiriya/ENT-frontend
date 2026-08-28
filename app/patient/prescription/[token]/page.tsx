@@ -47,6 +47,8 @@
         ? medicalHistoryLabels.filter(({ key }) => prescription[key])
         : [];
 
+    const customMedicalHistory = prescription?.customMedicalHistory ?? [];
+
     const verify = async () => {
         try {
         setLoading(true);
@@ -259,8 +261,9 @@
             </div>
             </div>
 
-            {/* Medical History — only conditions the front desk ticked */}
-            {activeMedicalHistory.length > 0 && (
+            {/* Medical History — ticked conditions plus any custom ones the
+                doctor typed in */}
+            {(activeMedicalHistory.length > 0 || customMedicalHistory.length > 0) && (
             <div className="avoid-break mt-6">
                 <h2 className="mb-2.5 border-b border-slate-300 pb-1.5 text-[10.5px] font-semibold uppercase tracking-[0.16em] text-slate-600">
                 Medical History
@@ -272,6 +275,14 @@
                     className="rounded-full bg-red-50 px-3 py-1 text-sm font-medium text-red-700"
                     >
                     {label}
+                    </span>
+                ))}
+                {customMedicalHistory.map((condition) => (
+                    <span
+                    key={condition}
+                    className="rounded-full bg-red-50 px-3 py-1 text-sm font-medium text-red-700"
+                    >
+                    {condition}
                     </span>
                 ))}
                 </div>

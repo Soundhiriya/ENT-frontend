@@ -78,7 +78,7 @@ export default function ReportsModal({ open, onClose }: Props) {
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-            <div className="flex max-h-[85vh] w-full max-w-3xl flex-col rounded-[10px] border border-[#E5E7EB] bg-white shadow-xl">
+            <div className="flex max-h-[90vh] w-full max-w-3xl flex-col rounded-[10px] border border-[#E5E7EB] bg-white shadow-xl">
                 {/* Header */}
                 <div className="flex items-center justify-between border-b border-[#E5E7EB] p-4">
                     <div>
@@ -91,7 +91,7 @@ export default function ReportsModal({ open, onClose }: Props) {
                     <button
                         onClick={onClose}
                         aria-label="Close"
-                        className="flex h-8 w-8 items-center justify-center rounded-[10px] text-slate-400 transition-colors duration-150 hover:bg-slate-100 hover:text-slate-700"
+                        className="flex h-8 w-8 max-lg:h-10 max-lg:w-10 items-center justify-center rounded-[10px] text-slate-400 transition-colors duration-150 hover:bg-slate-100 hover:text-slate-700"
                     >
                         <X size={18} />
                     </button>
@@ -107,7 +107,7 @@ export default function ReportsModal({ open, onClose }: Props) {
                                 value={startDate}
                                 max={endDate}
                                 onChange={(e) => setStartDate(e.target.value)}
-                                className="mt-1 rounded-[10px] border border-[#E5E7EB] bg-slate-50 p-2.5 text-sm outline-none focus:border-[var(--brand-secondary)] focus:ring-2 focus:ring-[var(--brand-secondary)]/20"
+                                className="mt-1 rounded-[10px] border border-[#E5E7EB] bg-slate-50 p-2.5 text-sm outline-none focus:border-[var(--brand-secondary)] focus:ring-2 focus:ring-[var(--brand-secondary)]/20 max-lg:min-h-[40px]"
                             />
                         </div>
 
@@ -119,7 +119,7 @@ export default function ReportsModal({ open, onClose }: Props) {
                                 min={startDate}
                                 max={today()}
                                 onChange={(e) => setEndDate(e.target.value)}
-                                className="mt-1 rounded-[10px] border border-[#E5E7EB] bg-slate-50 p-2.5 text-sm outline-none focus:border-[var(--brand-secondary)] focus:ring-2 focus:ring-[var(--brand-secondary)]/20"
+                                className="mt-1 rounded-[10px] border border-[#E5E7EB] bg-slate-50 p-2.5 text-sm outline-none focus:border-[var(--brand-secondary)] focus:ring-2 focus:ring-[var(--brand-secondary)]/20 max-lg:min-h-[40px]"
                             />
                         </div>
                     </div>
@@ -147,7 +147,7 @@ export default function ReportsModal({ open, onClose }: Props) {
                                 <button
                                     onClick={() => handleDownload(type, "excel")}
                                     disabled={downloadingKey !== null}
-                                    className="flex items-center gap-1.5 rounded-[10px] border border-[#E5E7EB] bg-white px-3 py-2 text-xs font-medium text-slate-700 shadow-sm transition-colors duration-150 hover:bg-slate-100 disabled:opacity-60"
+                                    className="flex items-center gap-1.5 rounded-[10px] border border-[#E5E7EB] bg-white px-3 py-2 text-xs font-medium text-slate-700 shadow-sm transition-colors duration-150 hover:bg-slate-100 disabled:opacity-60 max-lg:min-h-[40px]"
                                 >
                                     <FileSpreadsheet size={14} />
                                     {downloadingKey === `${type}-excel` ? "Downloading..." : "Excel"}
@@ -156,7 +156,7 @@ export default function ReportsModal({ open, onClose }: Props) {
                                 <button
                                     onClick={() => handleDownload(type, "pdf")}
                                     disabled={downloadingKey !== null}
-                                    className="flex items-center gap-1.5 rounded-[10px] border border-[#E5E7EB] bg-white px-3 py-2 text-xs font-medium text-slate-700 shadow-sm transition-colors duration-150 hover:bg-slate-100 disabled:opacity-60"
+                                    className="flex items-center gap-1.5 rounded-[10px] border border-[#E5E7EB] bg-white px-3 py-2 text-xs font-medium text-slate-700 shadow-sm transition-colors duration-150 hover:bg-slate-100 disabled:opacity-60 max-lg:min-h-[40px]"
                                 >
                                     <FileText size={14} />
                                     {downloadingKey === `${type}-pdf` ? "Downloading..." : "PDF"}

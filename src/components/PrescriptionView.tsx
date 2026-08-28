@@ -15,6 +15,7 @@
 "use client";
 
 import QRCode from "react-qr-code";
+import { PlayCircle } from "lucide-react";
 import { PrescriptionViewData } from "@/src/types/prescription";
 
 interface PrescriptionViewProps {
@@ -26,6 +27,14 @@ interface PrescriptionViewProps {
   // information. Kept as an opt-in rather than deleted so an internal
   // admin/billing screen can reuse this renderer with the amounts shown.
   showBilling?: boolean;
+  // The printed/patient-facing document only ever shows a QR for endoscopy
+  // images & videos — scanning it is the right move on paper or on a
+  // patient's own phone, but a doctor reviewing past visits on their own
+  // screen (PatientHistoryModal) shouldn't have to scan their own QR code
+  // to see what they themselves captured. Opt-in and print:hidden, so the
+  // physical prescription is completely unaffected — the QR still prints
+  // exactly as before.
+  showMediaInline?: boolean;
 }
 
 // Small caps rule used for every section title, so the document reads with a
@@ -51,6 +60,7 @@ export default function PrescriptionView({
   prescriptionUrl,
   onPrint,
   showBilling = false,
+  showMediaInline = false,
 }: PrescriptionViewProps) {
   const hasVitals =
     !!data.bp ||
@@ -70,6 +80,8 @@ export default function PrescriptionView({
   const activeMedicalHistory = medicalHistoryLabels.filter(
     ({ key }) => data[key]
   );
+
+  const customMedicalHistory = data.customMedicalHistory ?? [];
 
   const billingTotal =
     (data.consultationFee ?? 0) +
@@ -226,9 +238,10 @@ export default function PrescriptionView({
 
       <div className="mt-2.5 border-t border-slate-200" />
 
-      {/* Medical History — only conditions the front desk ticked */}
+      {/* Medical History — ticked conditions plus any custom ones the
+          doctor typed in */}
 
-      {activeMedicalHistory.length > 0 && (
+      {(activeMedicalHistory.length > 0 || customMedicalHistory.length > 0) && (
         <div className="mt-4 break-inside-avoid">
 
           <SectionHeading>Medical History</SectionHeading>
@@ -242,7 +255,69 @@ export default function PrescriptionView({
                 {label}
               </span>
             ))}
+            {customMedicalHistory.map((condition) => (
+              <span
+                key={condition}
+                className="rounded-sm border border-red-300 bg-red-50 px-2.5 py-0.5 text-[11px] font-medium uppercase tracking-[0.06em] text-red-700 [print-color-adjust:exact]"
+              >
+                {condition}
+              </span>
+            ))}
           </div>
+        </div>
+      )}
+
+      {/* Endoscopy images & videos — screen-only (print:hidden), so the
+          printed page still relies solely on the QR above. Lets a doctor
+          reviewing history see what was captured without scanning it. */}
+
+      {showMediaInline && hasMedia && (
+        <div className="mt-4 break-inside-avoid print:hidden">
+          <SectionHeading>Endoscopy Images &amp; Videos</SectionHeading>
+
+          {data.endoscopyImages.length > 0 && (
+            <div className="mt-2 grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-6">
+              {data.endoscopyImages
+                .slice()
+                .sort((a, b) => a.displayOrder - b.displayOrder)
+                .map((image) => (
+                  <a
+                    key={image.imageUrl}
+                    href={image.imageUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block overflow-hidden rounded-md border border-slate-200 bg-slate-50 transition-opacity hover:opacity-80"
+                  >
+                    <img
+                      src={image.imageUrl}
+                      alt={image.imageName}
+                      className="h-20 w-full object-cover"
+                    />
+                  </a>
+                ))}
+            </div>
+          )}
+
+          {data.youtubeVideos.length > 0 && (
+            <div
+              className={`flex flex-col gap-1.5 ${
+                data.endoscopyImages.length > 0 ? "mt-3" : "mt-2"
+              }`}
+            >
+              {data.youtubeVideos.map((video) => (
+                <a
+                  key={video.youtubeUrl}
+                  href={video.youtubeUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-[12px] text-blue-600 hover:underline"
+                >
+                  <PlayCircle className="h-3.5 w-3.5 shrink-0" />
+                  {video.title || video.youtubeUrl}
+                </a>
+              ))}
+            </div>
+          )}
         </div>
       )}
 

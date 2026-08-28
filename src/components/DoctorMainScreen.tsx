@@ -18,7 +18,7 @@ const DoctorMainScreen = ({selectedPatient,queue,selectedAppointmentId,onSelect,
         console.log("Ia m the patient dr gonna consult now",selectedPatient.name);
     },[selectedPatient])
 return (
-    <div className="flex h-full gap-6">
+    <div className="flex flex-col gap-3 lg:h-full lg:flex-row lg:gap-6">
 
         <DoctorWorkspace 
         selectedPatient={selectedPatient}

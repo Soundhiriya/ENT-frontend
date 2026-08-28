@@ -82,7 +82,7 @@ export default function ManagePatientsModal({ open, onClose }: Props) {
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-            <div className="flex max-h-[85vh] w-full max-w-5xl flex-col rounded-[10px] border border-[#E5E7EB] bg-white shadow-xl">
+            <div className="flex max-h-[90vh] w-full max-w-5xl flex-col rounded-[10px] border border-[#E5E7EB] bg-white shadow-xl">
                 {/* Header */}
                 <div className="flex items-center justify-between border-b border-[#E5E7EB] p-4">
                     <div>
@@ -95,7 +95,7 @@ export default function ManagePatientsModal({ open, onClose }: Props) {
                     <button
                         onClick={onClose}
                         aria-label="Close"
-                        className="flex h-8 w-8 items-center justify-center rounded-[10px] text-slate-400 transition-colors duration-150 hover:bg-slate-100 hover:text-slate-700"
+                        className="flex h-8 w-8 max-lg:h-10 max-lg:w-10 items-center justify-center rounded-[10px] text-slate-400 transition-colors duration-150 hover:bg-slate-100 hover:text-slate-700"
                     >
                         <X size={18} />
                     </button>
@@ -103,8 +103,8 @@ export default function ManagePatientsModal({ open, onClose }: Props) {
 
                 {/* Search */}
                 <div className="border-b border-[#E5E7EB] p-4">
-                    <form onSubmit={submitSearch} className="flex gap-2">
-                        <div className="relative flex-1">
+                    <form onSubmit={submitSearch} className="flex flex-wrap gap-2">
+                        <div className="relative min-w-0 flex-1">
                             <Search
                                 size={15}
                                 className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
@@ -113,13 +113,13 @@ export default function ManagePatientsModal({ open, onClose }: Props) {
                                 value={searchInput}
                                 onChange={(e) => setSearchInput(e.target.value)}
                                 placeholder="Search by name, patient ID, or phone..."
-                                className="w-full rounded-[10px] border border-[#E5E7EB] bg-slate-50 py-2.5 pl-9 pr-3 text-sm outline-none focus:border-[var(--brand-secondary)] focus:ring-2 focus:ring-[var(--brand-secondary)]/20"
+                                className="w-full rounded-[10px] border border-[#E5E7EB] bg-slate-50 py-2.5 pl-9 pr-3 text-sm outline-none focus:border-[var(--brand-secondary)] focus:ring-2 focus:ring-[var(--brand-secondary)]/20 max-lg:min-h-[40px]"
                             />
                         </div>
 
                         <button
                             type="submit"
-                            className="rounded-[10px] bg-[var(--brand-primary)] px-4 py-2 text-xs font-medium text-white shadow-sm transition-opacity duration-150 hover:opacity-90"
+                            className="rounded-[10px] bg-[var(--brand-primary)] px-4 py-2 text-xs font-medium text-white shadow-sm transition-opacity duration-150 hover:opacity-90 max-lg:min-h-[40px]"
                         >
                             Search
                         </button>
@@ -132,7 +132,7 @@ export default function ManagePatientsModal({ open, onClose }: Props) {
                                     setKeyword("");
                                     setPage(0);
                                 }}
-                                className="rounded-[10px] border border-[#E5E7EB] px-4 py-2 text-xs font-medium text-slate-600 transition-colors duration-150 hover:bg-slate-50"
+                                className="rounded-[10px] border border-[#E5E7EB] px-4 py-2 text-xs font-medium text-slate-600 transition-colors duration-150 hover:bg-slate-50 max-lg:min-h-[40px]"
                             >
                                 Clear
                             </button>
@@ -151,7 +151,8 @@ export default function ManagePatientsModal({ open, onClose }: Props) {
                             No patients found.
                         </div>
                     ) : (
-                        <table className="w-full border-collapse text-sm">
+                        <div className="overflow-x-auto">
+                        <table className="w-full min-w-[760px] border-collapse text-sm">
                             <thead className="sticky top-0 z-[1]">
                                 <tr className="border-b border-[#E5E7EB] bg-slate-50 text-xs text-slate-500">
                                     <th className="p-3 text-left font-medium">Name</th>
@@ -197,7 +198,7 @@ export default function ManagePatientsModal({ open, onClose }: Props) {
                                             <div className="flex items-center justify-center gap-2">
                                                 <button
                                                     onClick={() => setHistoryPatientId(patient.id)}
-                                                    className="inline-flex items-center gap-1 rounded-[10px] border border-[#E5E7EB] px-2.5 py-1 text-xs font-medium text-slate-600 transition-colors duration-150 hover:bg-slate-50"
+                                                    className="inline-flex items-center gap-1 rounded-[10px] border border-[#E5E7EB] px-2.5 py-1 text-xs font-medium text-slate-600 transition-colors duration-150 hover:bg-slate-50 max-lg:min-h-[40px]"
                                                 >
                                                     <History size={12} />
                                                     History
@@ -205,7 +206,7 @@ export default function ManagePatientsModal({ open, onClose }: Props) {
 
                                                 <button
                                                     onClick={() => setEditingPatient(patient)}
-                                                    className="inline-flex items-center gap-1 rounded-[10px] border border-[#E5E7EB] px-2.5 py-1 text-xs font-medium text-slate-600 transition-colors duration-150 hover:bg-slate-50"
+                                                    className="inline-flex items-center gap-1 rounded-[10px] border border-[#E5E7EB] px-2.5 py-1 text-xs font-medium text-slate-600 transition-colors duration-150 hover:bg-slate-50 max-lg:min-h-[40px]"
                                                 >
                                                     <Pencil size={12} />
                                                     Edit
@@ -216,6 +217,7 @@ export default function ManagePatientsModal({ open, onClose }: Props) {
                                 ))}
                             </tbody>
                         </table>
+                        </div>
                     )}
                 </div>
 
@@ -225,7 +227,7 @@ export default function ManagePatientsModal({ open, onClose }: Props) {
                         <button
                             onClick={() => setPage((p) => Math.max(0, p - 1))}
                             disabled={patientsPage.first}
-                            className="rounded-[10px] border border-[#E5E7EB] bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+                            className="rounded-[10px] border border-[#E5E7EB] bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40 max-lg:min-h-[40px]"
                         >
                             Previous
                         </button>
@@ -237,7 +239,7 @@ export default function ManagePatientsModal({ open, onClose }: Props) {
                         <button
                             onClick={() => setPage((p) => p + 1)}
                             disabled={patientsPage.last}
-                            className="rounded-[10px] border border-[#E5E7EB] bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+                            className="rounded-[10px] border border-[#E5E7EB] bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40 max-lg:min-h-[40px]"
                         >
                             Next
                         </button>

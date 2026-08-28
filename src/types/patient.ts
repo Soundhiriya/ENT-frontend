@@ -45,6 +45,7 @@ export interface CreateAppointmentDto {
     bronchialAsthma?: boolean;
     epilepsy?: boolean;
     antenatal?: boolean;
+    customMedicalHistory?: string[];
     hospitalId: number;
 }
 

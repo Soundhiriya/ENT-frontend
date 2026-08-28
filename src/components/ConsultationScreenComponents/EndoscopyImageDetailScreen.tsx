@@ -60,7 +60,7 @@
             <button
             type="button"
             onClick={() => setIsCameraOpen(true)}
-            className="inline-flex items-center gap-1 rounded-md bg-blue-600 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-blue-700"
+            className="inline-flex items-center gap-1 rounded-md bg-blue-600 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-blue-700 max-lg:min-h-[40px]"
             >
             <Camera className="h-3.5 w-3.5" />
             Capture

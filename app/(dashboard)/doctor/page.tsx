@@ -152,7 +152,7 @@
 
                 <button
                     onClick={() => setHistoryPatientId(selectedPatient.id)}
-                    className="flex items-center gap-1.5 rounded-md border border-[#E5E7EB] bg-white px-2.5 py-1 text-xs font-medium text-slate-700 shadow-sm transition-all duration-150 hover:bg-slate-50"
+                    className="flex items-center gap-1.5 rounded-md border border-[#E5E7EB] bg-white px-2.5 py-1 text-xs font-medium text-slate-700 shadow-sm transition-all duration-150 hover:bg-slate-50 max-lg:min-h-[40px]"
                 >
                     <History size={13} />
                     History
@@ -172,7 +172,7 @@
             <div className="flex flex-col gap-2 sm:flex-row">
                 <button
                 onClick={() => setRegisterOpenModal(true)}
-                className="flex items-center justify-center gap-1.5 rounded-md bg-[var(--brand-primary)] px-3 py-1.5 text-xs font-medium text-white shadow-sm transition-all duration-150 hover:opacity-90 hover:shadow-md active:scale-[0.98] sm:text-sm"
+                className="flex items-center justify-center gap-1.5 rounded-md bg-[var(--brand-primary)] px-3 py-1.5 text-xs font-medium text-white shadow-sm transition-all duration-150 hover:opacity-90 hover:shadow-md active:scale-[0.98] sm:text-sm max-lg:min-h-[40px]"
                 >
                 <UserPlus size={15} />
                 Register Patient
@@ -180,7 +180,7 @@
 
                 <button
                 onClick={() => setSearchOpenModal(true)}
-                className="flex items-center justify-center gap-1.5 rounded-md border border-[#E5E7EB] bg-white px-3 py-1.5 text-xs font-medium text-slate-700 shadow-sm transition-all duration-150 hover:bg-slate-50 hover:shadow-md active:scale-[0.98] sm:text-sm"
+                className="flex items-center justify-center gap-1.5 rounded-md border border-[#E5E7EB] bg-white px-3 py-1.5 text-xs font-medium text-slate-700 shadow-sm transition-all duration-150 hover:bg-slate-50 hover:shadow-md active:scale-[0.98] sm:text-sm max-lg:min-h-[40px]"
                 >
                 <Search size={15} />
                 Book Appointment

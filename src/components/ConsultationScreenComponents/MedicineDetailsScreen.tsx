@@ -96,7 +96,7 @@ export const INSTRUCTIONS = [
             type="button"
             {...attributes}
             {...listeners}
-            className="inline-flex cursor-grab touch-none items-center justify-center text-slate-400 hover:text-slate-600 active:cursor-grabbing"
+            className="inline-flex min-h-[32px] min-w-[32px] max-lg:min-h-[40px] max-lg:min-w-[40px] cursor-grab touch-none items-center justify-center text-slate-400 hover:text-slate-600 active:cursor-grabbing"
             aria-label="Drag to reorder medicine"
             >
             <GripVertical className="h-4 w-4" />
@@ -152,7 +152,7 @@ export const INSTRUCTIONS = [
         </td>
         <td className="p-1.5 text-center">
             <button
-            className="text-xs font-medium text-red-600 hover:text-red-700"
+            className="inline-flex items-center justify-center text-xs font-medium text-red-600 hover:text-red-700 max-lg:min-h-[40px] max-lg:px-2"
             onClick={() => onRemove(index)}
             >
             Remove
@@ -350,7 +350,7 @@ export const INSTRUCTIONS = [
         <button
             type="button"
             onClick={addMedicine}
-            className="mt-2 rounded-md bg-blue-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-700"
+            className="mt-2 rounded-md bg-blue-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-700 max-lg:min-h-[40px]"
         >
             Add Medicine
         </button>

@@ -170,7 +170,7 @@ const SetPasswordPageContent = () => {
               <button
                 type="button"
                 onClick={() => setShowPassword((v) => !v)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                className="absolute right-3 top-1/2 flex -translate-y-1/2 items-center justify-center max-lg:min-h-[40px] max-lg:min-w-[40px] text-slate-400 hover:text-slate-600"
                 aria-label={showPassword ? "Hide password" : "Show password"}
               >
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -200,7 +200,7 @@ const SetPasswordPageContent = () => {
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword((v) => !v)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                className="absolute right-3 top-1/2 flex -translate-y-1/2 items-center justify-center max-lg:min-h-[40px] max-lg:min-w-[40px] text-slate-400 hover:text-slate-600"
                 aria-label={showConfirmPassword ? "Hide password" : "Show password"}
               >
                 {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}

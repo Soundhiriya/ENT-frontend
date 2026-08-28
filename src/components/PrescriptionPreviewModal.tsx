@@ -110,6 +110,7 @@ export default function PrescriptionPreviewModal({
       bronchialAsthma: appointmentDetails.bronchialAsthma ?? null,
       epilepsy: appointmentDetails.epilepsy ?? null,
       antenatal: appointmentDetails.antenatal ?? null,
+      customMedicalHistory: appointmentDetails.customMedicalHistory ?? [],
       consultationFee: Number(consultationFee) || 0,
       charges,
       complaints,

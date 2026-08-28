@@ -85,7 +85,7 @@ export default function EditPatientModal({ open, patient, onClose, onSuccess }: 
                     <button
                         onClick={onClose}
                         aria-label="Close"
-                        className="flex h-8 w-8 items-center justify-center rounded-[10px] text-slate-400 transition-colors duration-150 hover:bg-slate-100 hover:text-slate-700"
+                        className="flex h-8 w-8 max-lg:h-10 max-lg:w-10 items-center justify-center rounded-[10px] text-slate-400 transition-colors duration-150 hover:bg-slate-100 hover:text-slate-700"
                     >
                         <X size={18} />
                     </button>

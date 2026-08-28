@@ -104,6 +104,7 @@ import { useRouter } from "next/navigation";
         bronchialAsthma: !!appointmentDetails?.bronchialAsthma,
         epilepsy: !!appointmentDetails?.epilepsy,
         antenatal: !!appointmentDetails?.antenatal,
+        customMedicalHistory: appointmentDetails?.customMedicalHistory ?? [],
         consultationFee: Number(consultationFee),
         advice,
         followUpDate: followUpDate || undefined,

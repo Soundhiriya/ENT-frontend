@@ -37,6 +37,7 @@ import {
     bronchialAsthma?: boolean | null;
     epilepsy?: boolean | null;
     antenatal?: boolean | null;
+    customMedicalHistory?: string[];
 
     complaints: ComplaintDto[];
     findings: FindingDto[];

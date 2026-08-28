@@ -114,7 +114,7 @@ export default function YoutubeLinkMasterTab() {
                 <button
                     type="submit"
                     disabled={saving}
-                    className="flex items-center gap-1.5 rounded-[10px] bg-[var(--brand-primary)] px-3 py-2 text-xs font-medium text-white shadow-sm transition-opacity duration-150 hover:opacity-90 disabled:opacity-60"
+                    className="flex items-center gap-1.5 rounded-[10px] bg-[var(--brand-primary)] px-3 py-2 text-xs font-medium text-white shadow-sm transition-opacity duration-150 hover:opacity-90 disabled:opacity-60 max-lg:min-h-[40px]"
                 >
                     <Plus size={15} />
                     Add
@@ -153,14 +153,14 @@ export default function YoutubeLinkMasterTab() {
                                     <button
                                         onClick={() => saveEdit(item.id)}
                                         aria-label="Save"
-                                        className="flex h-7 w-7 items-center justify-center rounded-md text-emerald-600 hover:bg-emerald-50"
+                                        className="flex h-7 w-7 max-lg:h-10 max-lg:w-10 items-center justify-center rounded-md text-emerald-600 hover:bg-emerald-50"
                                     >
                                         <Check size={15} />
                                     </button>
                                     <button
                                         onClick={cancelEdit}
                                         aria-label="Cancel"
-                                        className="flex h-7 w-7 items-center justify-center rounded-md text-slate-400 hover:bg-slate-100"
+                                        className="flex h-7 w-7 max-lg:h-10 max-lg:w-10 items-center justify-center rounded-md text-slate-400 hover:bg-slate-100"
                                     >
                                         <X size={15} />
                                     </button>
@@ -178,14 +178,14 @@ export default function YoutubeLinkMasterTab() {
                                     <button
                                         onClick={() => startEdit(item)}
                                         aria-label="Edit"
-                                        className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-slate-500 hover:bg-slate-100"
+                                        className="flex h-7 w-7 max-lg:h-10 max-lg:w-10 shrink-0 items-center justify-center rounded-md text-slate-500 hover:bg-slate-100"
                                     >
                                         <Pencil size={14} />
                                     </button>
                                     <button
                                         onClick={() => handleRemove(item.id)}
                                         aria-label="Remove"
-                                        className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-red-500 hover:bg-red-50"
+                                        className="flex h-7 w-7 max-lg:h-10 max-lg:w-10 shrink-0 items-center justify-center rounded-md text-red-500 hover:bg-red-50"
                                     >
                                         <Trash2 size={14} />
                                     </button>

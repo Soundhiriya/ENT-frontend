@@ -345,19 +345,19 @@ return (
             </h2>
 
             {canEditSelected && (
-                <span className="rounded-full border border-slate-200 bg-slate-50 px-2 py-0.5 text-[11px] font-medium text-slate-500">
+                <span className="rounded-full border border-slate-200 bg-slate-50 px-2 py-0.5 text-sm font-medium text-slate-500 sm:text-[11px]">
                     Editing
                 </span>
             )}
 
             {isSingleSelection && !isOwner && (
-                <span className="rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-[11px] font-medium text-amber-700">
+                <span className="rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-sm font-medium text-amber-700 sm:text-[11px]">
                     Shared by Dr. {selectedBookmarks[0].doctorName}
                 </span>
             )}
 
             {isMultiSelection && (
-                <span className="rounded-full border border-blue-200 bg-blue-50 px-2 py-0.5 text-[11px] font-medium text-blue-700">
+                <span className="rounded-full border border-blue-200 bg-blue-50 px-2 py-0.5 text-sm font-medium text-blue-700 sm:text-[11px]">
                     {selectedBookmarks.length} merged
                 </span>
             )}
@@ -368,7 +368,7 @@ return (
             {/* Bookmark Dropdown — a picker: choosing an option adds that
                 bookmark on top of whatever is already selected, then resets */}
             <select
-                className="h-9 rounded-md border border-slate-300 px-2 text-sm text-slate-700 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="h-9 max-lg:h-10 rounded-md border border-slate-300 px-2 text-sm text-slate-700 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 value=""
                 onChange={(e) => handleSelectBookmark(e.target.value)}
             >
@@ -431,7 +431,7 @@ return (
                     <button
                         type="button"
                         onClick={handleUpdateBookmark}
-                        className="flex-1 inline-flex h-9 items-center justify-center gap-2 rounded-md border border-slate-200 bg-slate-50 px-4 text-sm font-medium text-slate-600 transition-colors hover:border-slate-300 hover:bg-slate-100"
+                        className="flex-1 inline-flex h-9 max-lg:h-10 items-center justify-center gap-2 rounded-md border border-slate-200 bg-slate-50 px-4 text-sm font-medium text-slate-600 transition-colors hover:border-slate-300 hover:bg-slate-100"
                     >
                         <RefreshCw className="h-3.5 w-3.5" />
                         Update
@@ -440,7 +440,7 @@ return (
                     <button
                         type="button"
                         onClick={handleDeleteBookmark}
-                        className="flex-1 inline-flex h-9 items-center justify-center gap-2 rounded-md border border-red-200 bg-red-50 px-4 text-sm font-medium text-red-600 transition-colors hover:border-red-300 hover:bg-red-100"
+                        className="flex-1 inline-flex h-9 max-lg:h-10 items-center justify-center gap-2 rounded-md border border-red-200 bg-red-50 px-4 text-sm font-medium text-red-600 transition-colors hover:border-red-300 hover:bg-red-100"
                     >
                         <Trash2 className="h-3.5 w-3.5" />
                         Delete
@@ -451,7 +451,7 @@ return (
                 <button
                     type="button"
                     onClick={handleSaveBookmark}
-                    className="inline-flex h-9 items-center justify-center gap-2 rounded-md border border-blue-200 bg-blue-50 px-4 text-sm font-medium text-blue-700 transition-colors hover:border-blue-300 hover:bg-blue-100"
+                    className="inline-flex h-9 max-lg:h-10 items-center justify-center gap-2 rounded-md border border-blue-200 bg-blue-50 px-4 text-sm font-medium text-blue-700 transition-colors hover:border-blue-300 hover:bg-blue-100"
                 >
                     <Save className="h-3.5 w-3.5" />
                     {selectedBookmarks.length > 0 ? "Save as New Bookmark" : "Save Bookmark"}

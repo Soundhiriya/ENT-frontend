@@ -251,7 +251,7 @@ export default function LoginScreen() {
                 type="button"
                 onClick={() => setShowPassword((v) => !v)}
                 aria-label={showPassword ? "Hide password" : "Show password"}
-                className="text-[var(--ink-soft)] hover:text-[var(--teal-deep)] transition shrink-0"
+                className="flex items-center justify-center max-lg:min-h-[40px] max-lg:min-w-[40px] text-[var(--ink-soft)] hover:text-[var(--teal-deep)] transition shrink-0"
               >
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
@@ -370,12 +370,12 @@ function ForgotPasswordDialog({
       />
 
       {/* panel */}
-      <div className="relative w-full max-w-sm bg-white/95 backdrop-blur-xl rounded-[24px] shadow-2xl p-6 sm:p-7 animate-in fade-in zoom-in-95 duration-150">
+      <div className="relative w-full max-w-sm max-h-[90vh] overflow-y-auto bg-white/95 backdrop-blur-xl rounded-[24px] shadow-2xl p-6 sm:p-7 animate-in fade-in zoom-in-95 duration-150">
         <button
           type="button"
           onClick={onClose}
           aria-label="Close dialog"
-          className="absolute right-4 top-4 text-[var(--ink-soft)] hover:text-[var(--ink)] transition"
+          className="absolute right-4 top-4 flex items-center justify-center max-lg:min-h-[40px] max-lg:min-w-[40px] text-[var(--ink-soft)] hover:text-[var(--ink)] transition"
         >
           <X size={18} />
         </button>

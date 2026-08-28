@@ -88,7 +88,7 @@
         onClick={close}
     >
         <div
-        className="w-full max-w-3xl rounded-xl bg-white shadow-2xl flex flex-col max-h-[85vh]"
+        className="w-full max-w-3xl rounded-xl bg-white shadow-2xl flex flex-col max-h-[90vh]"
         onClick={(e) => e.stopPropagation()}
         >
         {/* Header */}
@@ -102,7 +102,7 @@
 
             <button
             onClick={close}
-            className="rounded-lg p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition"
+            className="flex items-center justify-center rounded-lg p-2 max-lg:min-h-[40px] max-lg:min-w-[40px] text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition"
             aria-label="Close"
             >
             <X size={22} />
@@ -160,7 +160,7 @@
             {patients?.content.map((patient) => (
             <div
                 key={patient.id}
-                className="mb-3 flex items-center justify-between rounded-lg border border-gray-200 p-4 transition hover:border-blue-300 hover:bg-blue-50"
+                className="mb-3 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-gray-200 p-4 transition hover:border-blue-300 hover:bg-blue-50"
             >
                 <div className="flex items-center gap-4">
                 <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-blue-100 font-semibold text-blue-600">
@@ -179,7 +179,7 @@
 
                 <button
                 onClick={() => onSelect(patient)}
-                className="shrink-0 rounded-lg bg-blue-600 px-4 py-2 text-white transition hover:bg-blue-700"
+                className="shrink-0 rounded-lg bg-blue-600 px-4 py-2 text-white transition hover:bg-blue-700 max-lg:min-h-[40px]"
                 >
                 Select
                 </button>
@@ -192,7 +192,7 @@
             <button
             onClick={prevPage}
             disabled={patients?.first}
-            className="flex items-center gap-2 rounded-lg border border-gray-300 px-4 py-2 text-gray-700 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex items-center gap-2 rounded-lg border border-gray-300 px-4 py-2 text-gray-700 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 max-lg:min-h-[40px]"
             >
             <ChevronLeft size={18} />
             Previous
@@ -205,7 +205,7 @@
             <button
             onClick={nextPage}
             disabled={patients?.last}
-            className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50 max-lg:min-h-[40px]"
             >
             Next
             <ChevronRight size={18} />

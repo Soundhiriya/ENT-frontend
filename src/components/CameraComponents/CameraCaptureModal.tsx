@@ -305,7 +305,7 @@
             <button
             type="button"
             onClick={handleClose}
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors"
+            className="flex h-9 w-9 max-lg:h-10 max-lg:w-10 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors"
             aria-label="Close camera"
             >
             <svg
@@ -343,7 +343,7 @@
                     id="camera-select"
                     value={selectedDeviceId}
                     onChange={handleDeviceChange}
-                    className="w-full rounded-lg border border-slate-300 bg-white px-2 py-2 text-xs text-slate-700 focus:border-blue-500 focus:outline-none sm:text-sm"
+                    className="w-full rounded-lg border border-slate-300 bg-white px-2 py-2 text-xs text-slate-700 focus:border-blue-500 focus:outline-none sm:text-sm max-lg:min-h-[40px]"
                 >
                     {devices.map((device, index) => (
                     <option key={device.deviceId} value={device.deviceId}>

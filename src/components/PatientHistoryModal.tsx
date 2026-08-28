@@ -130,7 +130,7 @@ export default function PatientHistoryModal({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-md p-1.5 text-blue-100 transition-colors hover:bg-blue-800 hover:text-white"
+            className="flex items-center justify-center rounded-md p-1.5 max-lg:min-h-[40px] max-lg:min-w-[40px] text-blue-100 transition-colors hover:bg-blue-800 hover:text-white"
             aria-label="Close patient history"
           >
             <X className="h-4 w-4" />
@@ -161,7 +161,7 @@ export default function PatientHistoryModal({
 
               <div className="mt-4 grid grid-cols-2 gap-4 border-t border-slate-100 pt-4 sm:grid-cols-4">
                 <div>
-                  <p className="text-[10px] font-medium uppercase tracking-wide text-slate-400">
+                  <p className="text-sm font-medium uppercase tracking-wide text-slate-400 sm:text-[10px]">
                     Gender
                   </p>
                   <p className="mt-0.5 text-sm font-semibold text-slate-800">
@@ -170,7 +170,7 @@ export default function PatientHistoryModal({
                 </div>
 
                 <div>
-                  <p className="text-[10px] font-medium uppercase tracking-wide text-slate-400">
+                  <p className="text-sm font-medium uppercase tracking-wide text-slate-400 sm:text-[10px]">
                     Age
                   </p>
                   <p className="mt-0.5 text-sm font-semibold text-slate-800">
@@ -179,7 +179,7 @@ export default function PatientHistoryModal({
                 </div>
 
                 <div>
-                  <p className="text-[10px] font-medium uppercase tracking-wide text-slate-400">
+                  <p className="text-sm font-medium uppercase tracking-wide text-slate-400 sm:text-[10px]">
                     Phone
                   </p>
                   <p className="mt-0.5 text-sm font-semibold text-slate-800">
@@ -188,7 +188,7 @@ export default function PatientHistoryModal({
                 </div>
 
                 <div>
-                  <p className="text-[10px] font-medium uppercase tracking-wide text-slate-400">
+                  <p className="text-sm font-medium uppercase tracking-wide text-slate-400 sm:text-[10px]">
                     Location
                   </p>
                   <p className="mt-0.5 text-sm font-semibold text-slate-800">
@@ -268,6 +268,7 @@ export default function PatientHistoryModal({
                         <PrescriptionView
                           data={item}
                           prescriptionUrl={prescriptionUrl}
+                          showMediaInline
                         />
                       </div>
                     )}
@@ -283,7 +284,7 @@ export default function PatientHistoryModal({
               <button
                 onClick={() => setPage((p) => Math.max(0, p - 1))}
                 disabled={historyPage.first}
-                className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+                className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40 max-lg:min-h-[40px]"
               >
                 Previous
               </button>
@@ -295,7 +296,7 @@ export default function PatientHistoryModal({
               <button
                 onClick={() => setPage((p) => p + 1)}
                 disabled={historyPage.last}
-                className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+                className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40 max-lg:min-h-[40px]"
               >
                 Next
               </button>

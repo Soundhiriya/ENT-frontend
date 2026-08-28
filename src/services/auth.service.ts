@@ -2,19 +2,17 @@ import { request } from "./api";
 import { AuthMe, LoginRequest,LoginResponse } from "../types/auth";
 
 export async function login(data: LoginRequest): Promise<LoginResponse> {
-
-
   try {
     const response =await request<LoginResponse>("/public/login", {
-        method: "POST",
-        body: JSON.stringify(data),
-          });
-    return response;
-  } catch (error) {
-      throw error;
-  }
+            method: "POST",
+            body: JSON.stringify(data),
+              });
+        return response;
+      } catch (error) {
+          throw error;
+      }
 
-}
+    }
 
 export async function getMe(): Promise<AuthMe> {
     return await request<AuthMe>("/admin/auth/me");

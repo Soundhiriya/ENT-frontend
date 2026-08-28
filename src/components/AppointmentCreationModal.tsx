@@ -8,6 +8,7 @@
     import { DoctorDropdownDto, HospitalDropdown } from "../types/hospital";
 import LoadingSpinner from "./LoadingSpinner";
 import { getDoctors, getHospitals } from "../services/hospitalservice";
+import CustomMedicalHistoryInput from "./ConsultationScreenComponents/CustomMedicalHistoryInput";
 
     interface AppointmentCreationModalProps {
     open: boolean;
@@ -42,6 +43,7 @@ import { getDoctors, getHospitals } from "../services/hospitalservice";
         bronchialAsthma: false,
         epilepsy: false,
         antenatal: false,
+        customMedicalHistory: [],
         hospitalId: 0,
     });
     const [doctors, setDoctors] = useState<DoctorDropdownDto[]>([]);
@@ -86,6 +88,7 @@ import { getDoctors, getHospitals } from "../services/hospitalservice";
         bronchialAsthma: false,
         epilepsy: false,
         antenatal: false,
+        customMedicalHistory: [],
         hospitalId: isRememberedHospitalValid
         ? rememberedHospitalId
         : hospitals.length > 0
@@ -148,8 +151,8 @@ import { getDoctors, getHospitals } from "../services/hospitalservice";
 console.log("Selected hospitalId:", data.hospitalId);
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-        <div className="w-full max-w-2xl rounded-[10px] border border-[#E5E7EB] bg-white p-6 shadow-xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+        <div className="max-h-[90vh] w-full max-w-5xl overflow-y-auto rounded-[10px] border border-[#E5E7EB] bg-white p-6 shadow-xl">
 
             <div className="mb-6 flex items-center justify-between">
             <div>
@@ -182,7 +185,7 @@ console.log("Selected hospitalId:", data.hospitalId);
 
             <button
                 onClick={onClose}
-                className="flex h-8 w-8 items-center justify-center rounded-[10px] text-slate-400 hover:bg-slate-100"
+                className="flex h-8 w-8 max-lg:h-10 max-lg:w-10 shrink-0 items-center justify-center rounded-[10px] text-slate-400 hover:bg-slate-100"
             >
                 <X size={18} />
             </button>
@@ -190,6 +193,7 @@ console.log("Selected hospitalId:", data.hospitalId);
 
             <form onSubmit={handleSubmit} className="space-y-5">
 
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
                 <label className={labelClass}>Hospital</label>
 
@@ -236,7 +240,9 @@ console.log("Selected hospitalId:", data.hospitalId);
                 ))}
             </select>
             </div>
+            </div>
 
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
             <div>
                 <label className={labelClass}>Blood Pressure</label>
 
@@ -311,15 +317,16 @@ console.log("Selected hospitalId:", data.hospitalId);
                 }
                 />
             </div>
+            </div>
 
             <div>
                 <label className={labelClass}>Medical History</label>
 
-                <div className="mt-2 grid grid-cols-2 gap-3 sm:grid-cols-3">
+                <div className="mt-2 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
                 {medicalHistoryOptions.map((option) => (
                     <label
                     key={option.key}
-                    className="flex items-center gap-2 text-sm text-slate-700"
+                    className="flex min-h-[40px] items-center gap-2 text-sm text-slate-700 lg:min-h-0"
                     >
                     <input
                         type="checkbox"
@@ -335,6 +342,15 @@ console.log("Selected hospitalId:", data.hospitalId);
                     {option.label}
                     </label>
                 ))}
+                </div>
+
+                <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                <CustomMedicalHistoryInput
+                    items={data.customMedicalHistory ?? []}
+                    onChange={(items) =>
+                    setData((prev) => ({ ...prev, customMedicalHistory: items }))
+                    }
+                />
                 </div>
             </div>
 

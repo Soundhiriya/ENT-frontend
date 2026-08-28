@@ -5,6 +5,7 @@
     import { Patient } from "@/src/types/patient";
     import { Stethoscope } from "lucide-react";
     import React, { SetStateAction, useEffect, useState } from "react";
+    import CustomMedicalHistoryInput from "./CustomMedicalHistoryInput";
 
     const medicalHistoryLabels: {
     key: keyof Pick<
@@ -230,6 +231,15 @@
                     </label>
                     );
                 })}
+
+                <CustomMedicalHistoryInput
+                    items={appointmentDetails.customMedicalHistory ?? []}
+                    onChange={(items) =>
+                    setAppointmentDetails((prev) =>
+                        prev ? { ...prev, customMedicalHistory: items } : prev
+                    )
+                    }
+                />
                 </div>
             </div>
             </div>

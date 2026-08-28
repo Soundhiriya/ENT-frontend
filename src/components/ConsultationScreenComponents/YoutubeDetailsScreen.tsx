@@ -73,7 +73,7 @@ const YoutubeDetailsScreen = ({ youtubeVideos, setYoutubeVideos }: YoutubeDetail
         </h2>
 
         {youtubeVideos.length > 0 && (
-          <span className="rounded-full bg-red-50 px-2 py-0.5 text-[11px] font-medium text-red-600">
+          <span className="rounded-full bg-red-50 px-2 py-0.5 text-sm font-medium text-red-600 sm:text-[11px]">
             {youtubeVideos.length} added
           </span>
         )}
@@ -85,7 +85,7 @@ const YoutubeDetailsScreen = ({ youtubeVideos, setYoutubeVideos }: YoutubeDetail
           <select
             value={selectedVideo}
             onChange={(e) => handleSelectVideo(e.target.value)}
-            className="h-9 w-full cursor-pointer appearance-none rounded-md border border-slate-300 bg-white pl-7 pr-2 text-sm text-slate-700 focus:border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500"
+            className="h-9 max-lg:h-10 w-full cursor-pointer appearance-none rounded-md border border-slate-300 bg-white pl-7 pr-2 text-sm text-slate-700 focus:border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500"
           >
             <option value="">
               {recommendedVideos.length === 0
@@ -116,13 +116,13 @@ const YoutubeDetailsScreen = ({ youtubeVideos, setYoutubeVideos }: YoutubeDetail
             // Commit the pasted link on focus loss so it is not lost when
             // Enter is never pressed.
             onBlur={handleAddCustom}
-            className="h-9 flex-1 rounded-md border border-slate-300 px-2 text-sm focus:border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500"
+            className="h-9 max-lg:h-10 flex-1 rounded-md border border-slate-300 px-2 text-sm focus:border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500"
           />
 
           <button
             type="button"
             onClick={handleAddCustom}
-            className="inline-flex shrink-0 items-center gap-1 whitespace-nowrap rounded-md bg-blue-600 px-3 text-xs font-medium text-white shadow-sm transition-colors hover:bg-blue-700"
+            className="inline-flex h-9 max-lg:h-10 shrink-0 items-center gap-1 whitespace-nowrap rounded-md bg-blue-600 px-3 text-xs font-medium text-white shadow-sm transition-colors hover:bg-blue-700"
           >
             <Plus className="h-3.5 w-3.5" />
             Add
@@ -157,7 +157,7 @@ const YoutubeDetailsScreen = ({ youtubeVideos, setYoutubeVideos }: YoutubeDetail
                   href={video.youtubeUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-[11px] text-blue-600 hover:underline"
+                  className="inline-flex items-center gap-1 text-sm text-blue-600 hover:underline sm:text-[11px]"
                 >
                   Open <ExternalLink className="h-2.5 w-2.5" />
                 </a>
@@ -166,7 +166,7 @@ const YoutubeDetailsScreen = ({ youtubeVideos, setYoutubeVideos }: YoutubeDetail
               <button
                 type="button"
                 onClick={() => removeVideo(video.youtubeUrl)}
-                className="shrink-0 rounded-md p-1.5 text-slate-400 transition-colors hover:bg-red-100 hover:text-red-600"
+                className="flex shrink-0 items-center justify-center rounded-md p-1.5 max-lg:min-h-[40px] max-lg:min-w-[40px] text-slate-400 transition-colors hover:bg-red-100 hover:text-red-600"
                 aria-label={`Remove ${video.title}`}
               >
                 <Trash2 className="h-3.5 w-3.5" />

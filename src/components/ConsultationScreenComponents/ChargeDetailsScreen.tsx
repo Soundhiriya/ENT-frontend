@@ -108,7 +108,7 @@ const ChargeDetailsScreen = ({
                 <button
                     type="button"
                     onClick={addCharge}
-                    className="h-8 rounded-md bg-blue-600 px-3 text-xs font-medium text-white hover:bg-blue-700"
+                    className="h-8 rounded-md bg-blue-600 px-3 text-xs font-medium text-white hover:bg-blue-700 max-lg:h-10"
                 >
                     Add Charge
                 </button>
@@ -133,7 +133,7 @@ const ChargeDetailsScreen = ({
                                     <td className="p-1.5 text-center">
                                         <button
                                             type="button"
-                                            className="text-xs font-medium text-red-600 hover:text-red-700"
+                                            className="inline-flex items-center justify-center text-xs font-medium text-red-600 hover:text-red-700 max-lg:min-h-[40px] max-lg:px-2"
                                             onClick={() => removeCharge(index)}
                                         >
                                             Remove

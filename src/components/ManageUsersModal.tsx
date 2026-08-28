@@ -50,7 +50,7 @@ export default function ManageUsersModal({ open, onClose }: Props) {
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-            <div className="flex max-h-[85vh] w-full max-w-4xl flex-col rounded-[10px] border border-[#E5E7EB] bg-white shadow-xl">
+            <div className="flex max-h-[90vh] w-full max-w-4xl flex-col rounded-[10px] border border-[#E5E7EB] bg-white shadow-xl">
                 {/* Header */}
                 <div className="flex items-center justify-between border-b border-[#E5E7EB] p-4">
                     <div>
@@ -63,7 +63,7 @@ export default function ManageUsersModal({ open, onClose }: Props) {
                     <div className="flex items-center gap-2">
                         <button
                             onClick={() => setAddOpen(true)}
-                            className="flex items-center gap-1.5 rounded-[10px] bg-[var(--brand-primary)] px-3 py-2 text-xs font-medium text-white shadow-sm transition-opacity duration-150 hover:opacity-90"
+                            className="flex items-center gap-1.5 rounded-[10px] bg-[var(--brand-primary)] px-3 py-2 text-xs font-medium text-white shadow-sm transition-opacity duration-150 hover:opacity-90 max-lg:min-h-[40px]"
                         >
                             <UserPlus size={15} />
                             Add User
@@ -72,7 +72,7 @@ export default function ManageUsersModal({ open, onClose }: Props) {
                         <button
                             onClick={onClose}
                             aria-label="Close"
-                            className="flex h-8 w-8 items-center justify-center rounded-[10px] text-slate-400 transition-colors duration-150 hover:bg-slate-100 hover:text-slate-700"
+                            className="flex h-8 w-8 max-lg:h-10 max-lg:w-10 items-center justify-center rounded-[10px] text-slate-400 transition-colors duration-150 hover:bg-slate-100 hover:text-slate-700"
                         >
                             <X size={18} />
                         </button>
@@ -90,7 +90,8 @@ export default function ManageUsersModal({ open, onClose }: Props) {
                             No users found.
                         </div>
                     ) : (
-                        <table className="w-full border-collapse text-sm">
+                        <div className="overflow-x-auto">
+                        <table className="w-full min-w-[720px] border-collapse text-sm">
                             <thead className="sticky top-0 z-[1]">
                                 <tr className="border-b border-[#E5E7EB] bg-slate-50 text-xs text-slate-500">
                                     <th className="p-3 text-left font-medium">Name</th>
@@ -139,7 +140,7 @@ export default function ManageUsersModal({ open, onClose }: Props) {
                                         <td className="p-3 text-center">
                                             <button
                                                 onClick={() => setEditingUser(user)}
-                                                className="inline-flex items-center gap-1 rounded-[10px] border border-[#E5E7EB] px-2.5 py-1 text-xs font-medium text-slate-600 transition-colors duration-150 hover:bg-slate-50"
+                                                className="inline-flex items-center gap-1 rounded-[10px] border border-[#E5E7EB] px-2.5 py-1 text-xs font-medium text-slate-600 transition-colors duration-150 hover:bg-slate-50 max-lg:min-h-[40px]"
                                             >
                                                 <Pencil size={12} />
                                                 Edit
@@ -149,6 +150,7 @@ export default function ManageUsersModal({ open, onClose }: Props) {
                                 ))}
                             </tbody>
                         </table>
+                        </div>
                     )}
                 </div>
             </div>

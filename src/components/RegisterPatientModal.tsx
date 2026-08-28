@@ -90,8 +90,8 @@ const inputClass =
 const labelClass = "text-xs font-medium text-slate-600";
 
 return (
-<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-    <div className="w-full max-w-2xl rounded-[10px] border border-[#E5E7EB] bg-white p-6 shadow-xl">
+<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+    <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-[10px] border border-[#E5E7EB] bg-white p-6 shadow-xl">
     <div className="mb-6 flex items-center justify-between">
         <div>
         <h2 className="text-xl font-bold text-slate-800">Register Patient</h2>
@@ -101,7 +101,7 @@ return (
         <button
         onClick={onClose}
         aria-label="Close"
-        className="flex h-8 w-8 items-center justify-center rounded-[10px] text-slate-400 transition-colors duration-150 hover:bg-slate-100 hover:text-slate-700"
+        className="flex h-8 w-8 max-lg:h-10 max-lg:w-10 items-center justify-center rounded-[10px] text-slate-400 transition-colors duration-150 hover:bg-slate-100 hover:text-slate-700"
         >
         <X size={18} />
         </button>

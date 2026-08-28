@@ -67,10 +67,10 @@
     return (
         <RoleGaurd allowed={["DOCTOR", "NURSE", "RECEPTIONIST", "ADMIN"]}>
         <div className="min-h-screen bg-slate-50">
-        <div className="max-w-6xl mx-auto px-6 py-8">
+        <div className="max-w-6xl mx-auto px-4 py-6 sm:px-6 sm:py-8">
 
             {/* Header */}
-            <div className="flex items-start justify-between mb-8">
+            <div className="flex flex-col gap-3 mb-8 sm:flex-row sm:items-start sm:justify-between">
             <div>
                 <h1 className="text-xl font-semibold text-slate-900">
                 Nurse Dashboard
@@ -80,16 +80,16 @@
                 </p>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
                 <button
     onClick={() => setRegisterOpenModal(true)}
-    className="bg-[var(--brand-primary)] hover:opacity-90 text-white text-sm font-semibold px-4 py-2.5 rounded-[10px] transition-all"
+    className="bg-[var(--brand-primary)] hover:opacity-90 text-white text-sm font-semibold px-4 py-2.5 rounded-[10px] transition-all max-lg:min-h-[40px]"
     >
     Register Patient
     </button>
             <button
     onClick={() => setSearchOpenModal(true)}
-    className="border border-[var(--brand-primary)] text-[var(--brand-primary)] bg-white hover:bg-blue-50 text-sm font-semibold px-4 py-2.5 rounded-[10px] transition-all"
+    className="border border-[var(--brand-primary)] text-[var(--brand-primary)] bg-white hover:bg-blue-50 text-sm font-semibold px-4 py-2.5 rounded-[10px] transition-all max-lg:min-h-[40px]"
     >
     Book Appointment
     </button>
@@ -97,7 +97,7 @@
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-3 gap-4 mb-6">
+            <div className="grid grid-cols-1 gap-4 mb-6 sm:grid-cols-3">
             <div className="bg-white border border-slate-200 rounded-lg px-5 py-4">
                 <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">
                 Total Patients
@@ -142,7 +142,8 @@
             </div>
         ) : (
 
-       <table className="min-w-full text-sm">
+       <div className="overflow-x-auto">
+       <table className="min-w-[900px] text-sm">
                 <thead>
                     <tr className="border-b border-slate-200 bg-slate-50">
                     <th className="px-4 py-3 text-left font-medium text-slate-500 text-xs uppercase tracking-wide">
@@ -225,7 +226,8 @@
                     ))}
                 </tbody>
                 </table>
-        
+                </div>
+
         )}
         </div>
 

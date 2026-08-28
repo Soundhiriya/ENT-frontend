@@ -73,7 +73,7 @@
                 : "border-l-transparent hover:bg-slate-50"
             }`}
             >
-            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-slate-100 text-[11px] font-semibold text-slate-600">
+            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-slate-100 text-sm font-semibold text-slate-600 sm:text-[11px]">
                 {item.tokenNumber}
             </div>
             <span
@@ -102,7 +102,7 @@
                 : "border-l-transparent hover:bg-slate-50"
             }`}
         >
-            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-slate-100 text-[11px] font-semibold text-slate-600">
+            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-slate-100 text-sm font-semibold text-slate-600 sm:text-[11px]">
             {item.tokenNumber}
             </div>
 
@@ -110,13 +110,13 @@
             <p className="truncate text-xs font-medium text-slate-900">
                 {item.patientName}
             </p>
-            <p className="mt-0.5 truncate text-[11px] text-slate-500">
+            <p className="mt-0.5 truncate text-sm text-slate-500 sm:text-[11px]">
                 {age !== null ? `${age}y` : "-"}
                 <span className="mx-1 text-slate-300">·</span>
                 <span className="font-mono">{item.appointmentId}</span>
             </p>
             <span
-                className={`mt-1 inline-block rounded px-1.5 py-0.5 text-[10px] font-medium ${
+                className={`mt-1 inline-block rounded px-1.5 py-0.5 text-sm sm:text-[10px] font-medium ${
                 isCompleted
                     ? "border border-emerald-200 bg-emerald-50 text-emerald-700"
                     : "border border-amber-200 bg-amber-50 text-amber-700"
@@ -131,22 +131,25 @@
 
     const renderGroupLabel = (label: string, count: number) =>
         !collapsed && (
-        <div className="sticky top-0 z-[1] bg-slate-50 px-2.5 py-1.5 text-[10px] font-semibold uppercase tracking-wide text-slate-500">
+        <div className="sticky top-0 z-[1] bg-slate-50 px-2.5 py-1.5 text-sm font-semibold uppercase tracking-wide text-slate-500 sm:text-[10px]">
             {label} ({count})
         </div>
         );
 
     return (
         <div
-        className={`relative flex-shrink-0 rounded-xl border border-slate-200 bg-white shadow-sm transition-all duration-300 ease-in-out ${
-            collapsed ? "w-[64px]" : "w-[240px]"
+        className={`relative w-full flex-shrink-0 rounded-xl border border-slate-200 bg-white shadow-sm transition-all duration-300 ease-in-out ${
+            collapsed ? "lg:w-[64px]" : "lg:w-[240px]"
         }`}
         >
-        {/* Collapse toggle — sits on the panel's left edge */}
+        {/* Collapse toggle — sits on the panel's left edge at lg+ (beside the
+            workspace); below lg the panel stacks full-width, so the toggle
+            moves inside the top-right corner instead of protruding off the
+            left edge into the workspace above it. */}
         <button
             onClick={() => setCollapsed((c) => !c)}
             title={collapsed ? "Expand queue" : "Collapse queue"}
-            className="absolute -left-3 top-6 z-10 flex h-6 w-6 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 shadow-sm transition-colors hover:bg-slate-50 hover:text-slate-700"
+            className="absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 shadow-sm transition-colors hover:bg-slate-50 hover:text-slate-700 lg:right-auto lg:top-6 lg:-left-3 lg:h-6 lg:w-6"
         >
             {collapsed ? <ChevronLeft size={14} /> : <ChevronRight size={14} />}
         </button>
@@ -155,12 +158,12 @@
             {collapsed ? (
             <div className="flex flex-col items-center gap-2">
                 <span
-                className="text-[10px] font-semibold uppercase tracking-wide text-slate-400"
+                className="text-sm font-semibold uppercase tracking-wide text-slate-400 sm:text-[10px]"
                 style={{ writingMode: "vertical-rl" }}
                 >
                 Queue
                 </span>
-                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-900 text-[11px] font-semibold text-white">
+                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-900 text-sm font-semibold text-white sm:text-[11px]">
                 {queue.length}
                 </span>
             </div>

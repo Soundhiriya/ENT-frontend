@@ -50,6 +50,7 @@ export interface EndoscopyImageDto {
     bronchialAsthma?: boolean;
     epilepsy?: boolean;
     antenatal?: boolean;
+    customMedicalHistory?: string[];
     }
 
 
@@ -85,12 +86,10 @@ export interface ChargeDto {
 
 export interface CreateConsultationDto {
     appointmentId: number;
-
     bp?: string;
     weight?: number;
     height?: number;
     temperature?: number;
-
     // Mirrors the appointment's medical history. The doctor can correct what
     // the front desk ticked; omitting a field leaves the existing value alone.
     diabetes?: boolean;
@@ -99,9 +98,8 @@ export interface CreateConsultationDto {
     bronchialAsthma?: boolean;
     epilepsy?: boolean;
     antenatal?: boolean;
-
+    customMedicalHistory?: string[];
     consultationFee: number;
-
     advice?: string;
     followUpDate?: string;
 
