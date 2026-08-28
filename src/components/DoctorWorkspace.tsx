@@ -48,6 +48,8 @@ import { useRouter } from "next/navigation";
     const [consultationFee, setConsultationFee] = useState("250");
     const [advice, setAdvice] = useState("");
     const [followUpDate, setFollowUpDate] = useState("");
+    const [followUpValue, setFollowUpValue] = useState("");
+    const [followUpUnit, setFollowUpUnit] = useState<"days" | "months">("days");
     const [endoscopyImages, setEndoscopyImages] = useState<File[]>([]);
 
     const [bookmarks, setBookmarks] = useState<BookmarkResponse[]>([]);
@@ -70,6 +72,18 @@ import { useRouter } from "next/navigation";
 
         loadBookmarks();
     }, []);
+
+    const applyFollowUpInterval = (value: string, unit: "days" | "months") => {
+    const n = Number(value);
+    if (!value.trim() || Number.isNaN(n) || n <= 0) {
+        setFollowUpDate("");
+        return;
+    }
+    const d = new Date();
+    if (unit === "days") d.setDate(d.getDate() + n);
+    else d.setMonth(d.getMonth() + n);
+    setFollowUpDate(d.toLocaleDateString("en-CA"));
+    };
 
     const handleOpenPreview = () => {
         if (!selectedAppointmentId) {
@@ -267,12 +281,45 @@ import { useRouter } from "next/navigation";
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div>
                 <label className="mb-1 block text-xs font-medium text-slate-600">
+                    Follow-up After
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="number"
+                    min="1"
+                    placeholder="e.g. 7"
+                    value={followUpValue}
+                    onChange={(e) => {
+                      setFollowUpValue(e.target.value);
+                      applyFollowUpInterval(e.target.value, followUpUnit);
+                    }}
+                    className="h-8 w-20 rounded-md border border-slate-300 px-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  />
+                  <select
+                    value={followUpUnit}
+                    onChange={(e) => {
+                      const unit = e.target.value as "days" | "months";
+                      setFollowUpUnit(unit);
+                      applyFollowUpInterval(followUpValue, unit);
+                    }}
+                    className="h-8 rounded-md border border-slate-300 px-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  >
+                    <option value="days">Days</option>
+                    <option value="months">Months</option>
+                  </select>
+                </div>
+
+                <label className="mb-1 mt-2 block text-xs font-medium text-slate-600">
                     Follow-up Date
                 </label>
                 <input
                     type="date"
+                    min={new Date().toLocaleDateString("en-CA")}
                     value={followUpDate}
-                    onChange={(e) => setFollowUpDate(e.target.value)}
+                    onChange={(e) => {
+                      setFollowUpDate(e.target.value);
+                      setFollowUpValue("");
+                    }}
                     className="h-8 w-full rounded-md border border-slate-300 px-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 />
                 </div>
