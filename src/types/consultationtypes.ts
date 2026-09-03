@@ -118,5 +118,6 @@ export interface CreateConsultationDto {
 export interface ConsultationResponseDto{
     consultationId:number;
     appointmentId:number;
-    message:string
+    message:string;
+    prescriptionToken:string;
 }

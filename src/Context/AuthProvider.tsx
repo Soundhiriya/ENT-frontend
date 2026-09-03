@@ -33,10 +33,17 @@ export const AuthProvider = ({children} :AuthProviderProps) => {
         return;
     }
         async function loadUser(){
+            // [AUTH-DIAG] Temporary diagnostic logging for the mobile
+            // auto-logout investigation. Logging only — no behavior change,
+            // and never logs tokens/cookies/headers. Remove with the rest
+            // of the AUTH-DIAG logs in api.ts once the cause is found.
+            console.log("[AUTH]", new Date().toISOString(), "/admin/auth/me started");
             try {
                 const response = await request<AuthMe>("/admin/auth/me")
+                console.log("[AUTH]", new Date().toISOString(), "/admin/auth/me succeeded");
                 setUser(response);
-            } catch (error) {
+            } catch (error: any) {
+                console.log("[AUTH]", new Date().toISOString(), "/admin/auth/me failed | status:", error?.status);
                 throw error;
             }finally{
                 setLoading(false);

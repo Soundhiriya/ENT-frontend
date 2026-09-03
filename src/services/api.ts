@@ -65,15 +65,33 @@ async function doFetch(endpoint: string, options?: RequestInit) {
     return { response, data };
 }
 
+// [AUTH-DIAG] TEMPORARY diagnostic logging for the mobile auto-logout
+// investigation. Logging only — changes no behavior, and deliberately never
+// logs tokens, cookies, headers, or any response body. The ISO timestamp is
+// there to line these up against `docker compose logs -f backend`.
+// Remove every authLog() call (grep "AUTH-DIAG") once the cause is found.
+function authLog(...parts: unknown[]) {
+    console.log("[AUTH]", new Date().toISOString(), ...parts);
+}
+
 // Concurrent requests that all hit a 401 at once share this one in-flight
 // refresh instead of each firing their own /public/refresh call.
 let refreshPromise: Promise<boolean> | null = null;
 
 function refreshAccessToken(): Promise<boolean> {
     if (!refreshPromise) {
+        authLog("refresh attempt started"); // [AUTH-DIAG]
         refreshPromise = doFetch("/public/refresh", { method: "POST" })
-            .then(({ response }) => response.ok)
-            .catch(() => false)
+            .then(({ response }) => {
+                // [AUTH-DIAG]
+                authLog("refresh response status:", response.status, "| ok:", response.ok);
+                return response.ok;
+            })
+            .catch((err) => {
+                // [AUTH-DIAG]
+                authLog("refresh request failed (network/CORS):", String(err));
+                return false;
+            })
             .finally(() => {
                 refreshPromise = null;
             });
@@ -96,6 +114,14 @@ async function performRequest<T>(
         const isExpiredAccessToken = data?.error === "ACCESS_TOKEN_EXPIRED";
         const canRetry = isExpiredAccessToken && !isRetry && !endpoint.startsWith("/public/");
 
+        // [AUTH-DIAG]
+        authLog(
+            "401 on", endpoint,
+            "| error code:", data?.error,
+            "| isRetry:", isRetry,
+            "| canRetry:", canRetry
+        );
+
         if (canRetry) {
             const refreshed = await refreshAccessToken();
             if (refreshed) {
@@ -103,6 +129,11 @@ async function performRequest<T>(
             }
         }
 
+        // [AUTH-DIAG]
+        authLog(
+            "redirecting to / — reason: 401 on endpoint", endpoint,
+            "| refresh was attempted:", canRetry
+        );
         window.location.replace("/");
         throw new ApiError(data?.message ?? "Unauthorized", response.status, data?.fieldErrors);
     }
@@ -137,6 +168,9 @@ async function performDownload(endpoint: string, isRetry: boolean): Promise<void
     if (response.status === 401) {
         const canRetry = !isRetry;
 
+        // [AUTH-DIAG]
+        authLog("401 on download endpoint", endpoint, "| isRetry:", isRetry);
+
         if (canRetry) {
             const refreshed = await refreshAccessToken();
             if (refreshed) {
@@ -144,6 +178,11 @@ async function performDownload(endpoint: string, isRetry: boolean): Promise<void
             }
         }
 
+        // [AUTH-DIAG]
+        authLog(
+            "redirecting to / — reason: 401 on download endpoint", endpoint,
+            "| refresh was attempted:", canRetry
+        );
         window.location.replace("/");
         throw new ApiError("Unauthorized", 401);
     }

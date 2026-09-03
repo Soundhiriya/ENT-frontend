@@ -100,8 +100,24 @@ import { useRouter } from "next/navigation";
         setShowPreview(true);
     };
 
+    const buildWhatsappUrl = (phone: string, message: string) => {
+        const digits = phone.replace(/\D/g, "");
+        // Stored numbers are plain 10-digit mobile numbers with no country
+        // code; wa.me requires the calling code, so assume India (91)
+        // unless the number is already longer (i.e. already has one).
+        const phoneWithCountryCode = digits.length === 10 ? `91${digits}` : digits;
+        return `https://wa.me/${phoneWithCountryCode}?text=${encodeURIComponent(message)}`;
+    };
+
     const handleConfirmSaveConsultation = async () => {
         if (!selectedAppointmentId) return;
+
+        // Opened synchronously, in direct response to the click, so the
+        // popup blocker doesn't swallow it — the URL is filled in below
+        // once the save finishes and we have the prescription token.
+        const whatsappWindow = selectedPatient?.phone
+        ? window.open("", "_blank")
+        : null;
 
         const dto: CreateConsultationDto = {
         appointmentId: selectedAppointmentId,
@@ -149,8 +165,24 @@ import { useRouter } from "next/navigation";
         const response = await createConsultation(formData);
         toast.success(response.message);
         setShowPreview(false);
+
+        if (whatsappWindow && selectedPatient?.phone) {
+            const prescriptionUrl = `${window.location.origin}/patient/prescription/${response.prescriptionToken}`;
+            const doctorName = appointmentDetails?.doctorName
+            ? `Dr. ${appointmentDetails.doctorName}, ENT Specialist`
+            : "your doctor";
+            const message =
+            `Hi ${selectedPatient.name}, thank you for visiting ${appointmentDetails?.hospitalName ?? "us"} today. ` +
+            `It was a pleasure having you consult with ${doctorName}.\n\n` +
+            `Your e-prescription: ${prescriptionUrl}\n\n` +
+            `Please follow the advice and medication as prescribed. If you have any queries or doubts, feel free to reach out to us anytime — we're happy to help.\n\n` +
+            `Take care of yourself and get well soon!`;
+            whatsappWindow.location.href = buildWhatsappUrl(selectedPatient.phone, message);
+        }
+
         router.push(`/doctor/prescription/${response.consultationId}`);
         } catch (error) {
+        whatsappWindow?.close();
         // Pass the message, never the Error itself — sonner renders its
         // argument as a React child, and an object child throws.
         toast.error(error instanceof Error ? error.message : "Could not save the consultation.");
