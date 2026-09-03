@@ -74,27 +74,43 @@ function authLog(...parts: unknown[]) {
     console.log("[AUTH]", new Date().toISOString(), ...parts);
 }
 
-// Concurrent requests that all hit a 401 at once share this one in-flight
-// refresh instead of each firing their own /public/refresh call.
+// Concurrent requests within a tab that all hit a 401 at once share this one
+// in-flight refresh instead of each firing their own /public/refresh call.
 let refreshPromise: Promise<boolean> | null = null;
+
+async function doRefresh(): Promise<boolean> {
+    authLog("refresh attempt started"); // [AUTH-DIAG]
+    try {
+        const { response } = await doFetch("/public/refresh", { method: "POST" });
+        authLog("refresh response status:", response.status, "| ok:", response.ok); // [AUTH-DIAG]
+        return response.ok;
+    } catch (err) {
+        authLog("refresh request failed (network/CORS):", String(err)); // [AUTH-DIAG]
+        return false;
+    }
+}
+
+// Tabs share cookies, so two tabs independently calling /public/refresh
+// around the same moment can collide: the second one arrives after the
+// first has already rotated the refresh token, the server sees a reused
+// (already-rotated-away) token, and revokes the *whole* session family -
+// logging every tab out, not just the one that lost the race. The Web
+// Locks API gives every tab on the origin a real mutex with no race
+// window, so only one tab's refresh runs at a time; a tab that was
+// waiting gets its turn after the cookies are already updated, so its
+// own request/retry just works off the winner's refresh.
+const supportsWebLocks =
+    typeof navigator !== "undefined" && "locks" in navigator;
 
 function refreshAccessToken(): Promise<boolean> {
     if (!refreshPromise) {
-        authLog("refresh attempt started"); // [AUTH-DIAG]
-        refreshPromise = doFetch("/public/refresh", { method: "POST" })
-            .then(({ response }) => {
-                // [AUTH-DIAG]
-                authLog("refresh response status:", response.status, "| ok:", response.ok);
-                return response.ok;
-            })
-            .catch((err) => {
-                // [AUTH-DIAG]
-                authLog("refresh request failed (network/CORS):", String(err));
-                return false;
-            })
-            .finally(() => {
-                refreshPromise = null;
-            });
+        refreshPromise = (async () => {
+            return supportsWebLocks
+                ? navigator.locks.request<Promise<boolean>>("auth:refresh", doRefresh)
+                : doRefresh();
+        })().finally(() => {
+            refreshPromise = null;
+        });
     }
     return refreshPromise;
 }
@@ -107,12 +123,21 @@ async function performRequest<T>(
     const { response, data } = await doFetch(endpoint, options);
 
     if (response.status === 401) {
-        // Only an expired access token is worth refreshing for. Never
-        // retry a call that's already been retried once, and never try
-        // to refresh on behalf of the /public/* auth endpoints themselves
-        // (e.g. a failed /public/refresh must not trigger another refresh).
-        const isExpiredAccessToken = data?.error === "ACCESS_TOKEN_EXPIRED";
-        const canRetry = isExpiredAccessToken && !isRetry && !endpoint.startsWith("/public/");
+        // Any 401 on a protected endpoint is worth one refresh attempt — not
+        // just ACCESS_TOKEN_EXPIRED. That narrower check used to gate this,
+        // and it silently broke whenever the access cookie was *gone* rather
+        // than expired: JwtFilter never parses a token it doesn't have, so
+        // Spring Security answers "JWT token is missing or invalid" instead,
+        // and the user was logged out with a perfectly good refresh token
+        // still in the jar. A missing cookie is exactly as recoverable as an
+        // expired one, and the cookie can go missing for reasons the server
+        // never sees (browser eviction, storage pressure, ITP).
+        //
+        // The two guards below are what keep this safe: !isRetry means at
+        // most one refresh per request, so no loops, and the /public/ check
+        // keeps the auth endpoints themselves out of it (a failed
+        // /public/refresh must never trigger another refresh).
+        const canRetry = !isRetry && !endpoint.startsWith("/public/");
 
         // [AUTH-DIAG]
         authLog(
@@ -129,12 +154,19 @@ async function performRequest<T>(
             }
         }
 
-        // [AUTH-DIAG]
-        authLog(
-            "redirecting to / — reason: 401 on endpoint", endpoint,
-            "| refresh was attempted:", canRetry
-        );
-        window.location.replace("/");
+        // A 401 from /public/* (wrong login password, unregistered email on
+        // forgotPassword, an expired setPassword token, ...) is a normal
+        // business-logic error, not a dead session — there's no session to
+        // kick out of yet. Redirecting here would reload the page out from
+        // under the caller before its catch block can show the message.
+        if (!endpoint.startsWith("/public/")) {
+            // [AUTH-DIAG]
+            authLog(
+                "redirecting to / — reason: 401 on protected endpoint", endpoint,
+                "| refresh was attempted:", canRetry
+            );
+            window.location.replace("/");
+        }
         throw new ApiError(data?.message ?? "Unauthorized", response.status, data?.fieldErrors);
     }
 
