@@ -1,9 +1,24 @@
-    export type Gender = "MALE" | "FEMALE" | "OTHER";
-    export type AppointmentStatus =
+// ============================================================
+// Gender
+// ============================================================
+
+export type Gender = "MALE" | "FEMALE" | "OTHER";
+
+
+// ============================================================
+// Appointment Status
+// ============================================================
+
+export type AppointmentStatus =
     | "WAITING"
     | "IN_PROGRESS"
     | "COMPLETED"
     | "CANCELLED";
+
+
+// ============================================================
+// Endoscopy Image
+// ============================================================
 
 export interface EndoscopyImageDto {
     imageUrl: string;
@@ -11,7 +26,12 @@ export interface EndoscopyImageDto {
     displayOrder: number;
 }
 
-    export interface AppointmentDetailsDto {
+
+// ============================================================
+// Appointment Details
+// ============================================================
+
+export interface AppointmentDetailsDto {
     // Appointment
     id: number;
     appointmentId: string;
@@ -51,20 +71,53 @@ export interface EndoscopyImageDto {
     epilepsy?: boolean;
     antenatal?: boolean;
     customMedicalHistory?: string[];
-    }
-
-
-    export interface ComplaintDto {
-    complaint: string;
 }
+
+
+// ============================================================
+// Chief Complaint
+// ============================================================
+
+export type ComplaintSide =
+    | "LEFT"
+    | "RIGHT"
+    | "BILATERAL"
+    | "OVERALL";
+
+export interface ComplaintDto {
+    complaint: string;
+    side: ComplaintSide;
+    displayOrder?: number;
+}
+
+
+// ============================================================
+// Finding
+// ============================================================
 
 export interface FindingDto {
     finding: string;
 }
 
+
+// ============================================================
+// Diagnosis
+// ============================================================
+
+export type DiagnosisType =
+    | "PROVISIONAL"
+    | "FINAL";
+
 export interface DiagnosisDto {
     diagnosis: string;
+    type: DiagnosisType;
+    displayOrder?: number;
 }
+
+
+// ============================================================
+// Medicine
+// ============================================================
 
 export interface MedicineDto {
     medicineName: string;
@@ -74,24 +127,42 @@ export interface MedicineDto {
     instructions?: string;
 }
 
+
+// ============================================================
+// YouTube Video
+// ============================================================
+
 export interface YoutubeVideoDto {
     youtubeUrl: string;
     title?: string;
 }
+
+
+// ============================================================
+// Charge
+// ============================================================
 
 export interface ChargeDto {
     label: string;
     amount: number;
 }
 
+
+// ============================================================
+// Create Consultation
+// ============================================================
+
 export interface CreateConsultationDto {
+    // Appointment
     appointmentId: number;
+
+    // Vitals
     bp?: string;
     weight?: number;
     height?: number;
     temperature?: number;
-    // Mirrors the appointment's medical history. The doctor can correct what
-    // the front desk ticked; omitting a field leaves the existing value alone.
+
+    // Medical History
     diabetes?: boolean;
     hypertension?: boolean;
     tuberculosis?: boolean;
@@ -99,25 +170,44 @@ export interface CreateConsultationDto {
     epilepsy?: boolean;
     antenatal?: boolean;
     customMedicalHistory?: string[];
+
+    // Consultation
     consultationFee: number;
     advice?: string;
     followUpDate?: string;
 
+    // Chief Complaints
     complaints: ComplaintDto[];
+
+    // Findings
     findings: FindingDto[];
+
+    // Endoscopy
     otoendoscopies: FindingDto[];
     diagnosticNasalEndoscopies: FindingDto[];
     videoLaryngoscopies: FindingDto[];
+
+    // Diagnosis
     diagnoses: DiagnosisDto[];
+
+    // Medicines
     medicines: MedicineDto[];
+
+    // Charges
     charges: ChargeDto[];
+
+    // YouTube Videos
     youtubeVideos: YoutubeVideoDto[];
 }
 
 
-export interface ConsultationResponseDto{
-    consultationId:number;
-    appointmentId:number;
-    message:string;
-    prescriptionToken:string;
+// ============================================================
+// Consultation Response
+// ============================================================
+
+export interface ConsultationResponseDto {
+    consultationId: number;
+    appointmentId: number;
+    message: string;
+    prescriptionToken: string;
 }

@@ -1,127 +1,265 @@
-    // DiagnosisDetailsScreen.tsx
+import { DiagnosisDto } from "@/src/types/consultationtypes";
+import { Stethoscope } from "lucide-react";
+import { useState } from "react";
 
-    import { DiagnosisDto } from "@/src/types/consultationtypes";
-    import { DiagnosesDropdown, searchDiagnoses } from "@/src/services/masterservices";
-    import { Activity } from "lucide-react";
-    import React, { useState } from "react";
-    import { toast } from "sonner";
-
-    interface DiagnosisDetailsScreenProps {
+interface DiagnosisDetailsScreenProps {
     diagnoses: DiagnosisDto[];
-    setDiagnoses: React.Dispatch<React.SetStateAction<DiagnosisDto[]>>;
-    }
+    setDiagnoses: React.Dispatch<
+        React.SetStateAction<DiagnosisDto[]>
+    >;
+}
 
-    const DiagnosisDetailsScreen = ({
+type DiagnosisType = "PROVISIONAL" | "FINAL";
+
+export default function DiagnosisDetailsScreen({
     diagnoses,
     setDiagnoses,
-    }: DiagnosisDetailsScreenProps) => {
-    const [diagnosis, setDiagnosis] = useState("");
-    const [suggestions, setSuggestions] = useState<DiagnosesDropdown[]>([]);
+}: DiagnosisDetailsScreenProps) {
+    const [values, setValues] = useState<
+        Record<DiagnosisType, string>
+    >({
+        PROVISIONAL: "",
+        FINAL: "",
+    });
 
-    const handleSearch = async (value: string) => {
-        setDiagnosis(value);
+    const addDiagnosis = (type: DiagnosisType) => {
+        const value = values[type].trim();
 
-        if (value.trim().length < 2) {
-        setSuggestions([]);
-        return;
-        }
+        if (!value) return;
 
-        try {
-        const response = await searchDiagnoses(value);
-        setSuggestions(response);
-        } catch (error) {
-        toast.error(error instanceof Error ? error.message : "Could not search diagnoses.");
-        }
-    };
-
-    const addDiagnosis = (value: string) => {
-        if (!value.trim()) return;
-
-        const exists = diagnoses.some(
-        (d) => d.diagnosis.toLowerCase() === value.trim().toLowerCase()
+        const alreadyExists = diagnoses.some(
+            (item) =>
+                item.type === type &&
+                item.diagnosis.toLowerCase() ===
+                    value.toLowerCase()
         );
 
-        if (exists) {
-        toast.error("Diagnosis already added");
-        return;
+        if (alreadyExists) {
+            setValues((prev) => ({
+                ...prev,
+                [type]: "",
+            }));
+            return;
         }
 
-        setDiagnoses((prev) => [...prev, { diagnosis: value.trim() }]);
+        setDiagnoses((prev) => [
+            ...prev,
+            {
+                diagnosis: value,
+                type,
+                displayOrder: prev.length + 1,
+            },
+        ]);
 
-        setDiagnosis("");
-        setSuggestions([]);
+        setValues((prev) => ({
+            ...prev,
+            [type]: "",
+        }));
     };
 
-    const removeDiagnosis = (diagnosis: string) => {
-        setDiagnoses((prev) => prev.filter((d) => d.diagnosis !== diagnosis));
+    const removeDiagnosis = (
+        type: DiagnosisType,
+        diagnosis: string
+    ) => {
+        setDiagnoses((prev) =>
+            prev.filter(
+                (item) =>
+                    !(
+                        item.type === type &&
+                        item.diagnosis === diagnosis
+                    )
+            )
+        );
     };
+
+    const provisionalDiagnoses = diagnoses.filter(
+        (item) => item.type === "PROVISIONAL"
+    );
+
+    const finalDiagnoses = diagnoses.filter(
+        (item) => item.type === "FINAL"
+    );
 
     return (
-        <div className="rounded-lg border border-slate-200 bg-white p-3 shadow-sm">
-        <h2 className="mb-2 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-slate-500">
-            <Activity className="h-3.5 w-3.5" />
-            Diagnosis
-        </h2>
+        <div className="w-full rounded-xl border border-slate-200 bg-white p-3 shadow-sm">
+            {/* Header */}
+            <div className="mb-3 flex items-center gap-2">
+                <div className="flex h-6 w-6 items-center justify-center rounded-md bg-blue-50">
+                    <Stethoscope className="h-3.5 w-3.5 text-blue-600" />
+                </div>
 
-        <div className="relative">
-            <input
-            type="text"
-            value={diagnosis}
-            placeholder="Search or enter diagnosis"
-            onChange={(e) => handleSearch(e.target.value)}
-            onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                e.preventDefault();
-                addDiagnosis(diagnosis);
-                }
-            }}
-            // Commit whatever is still typed when the field loses focus, so a
-            // diagnosis is not silently dropped if Enter was never pressed.
-            // Suggestion clicks use onMouseDown + preventDefault, so they keep
-            // focus here and cannot double-add.
-            onBlur={() => addDiagnosis(diagnosis)}
-            className="h-8 w-full rounded-md border border-slate-300 px-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-            />
+                <h2 className="text-[11px] font-semibold uppercase tracking-wide text-slate-700">
+                    Diagnosis
+                </h2>
+            </div>
 
-            {suggestions.length > 0 && (
-            <div className="absolute z-10 mt-1 max-h-48 w-full overflow-y-auto rounded-md border border-slate-200 bg-white text-sm shadow-lg">
-                {suggestions.map((item) => (
-                <div
-                    key={item.id}
-                    onMouseDown={(e) => {
-                    e.preventDefault();
-                    addDiagnosis(item.diagnosis);
+            {/* Provisional Diagnosis */}
+            <div className="mb-3">
+                <label className="mb-1 block text-[10px] font-semibold uppercase tracking-wide text-slate-600">
+                    Provisional
+                </label>
+
+                <input
+                    type="text"
+                    value={values.PROVISIONAL}
+                    placeholder="Enter provisional diagnosis"
+                    onChange={(e) =>
+                        setValues((prev) => ({
+                            ...prev,
+                            PROVISIONAL: e.target.value,
+                        }))
+                    }
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                            e.preventDefault();
+                            addDiagnosis("PROVISIONAL");
+                        }
                     }}
-                    className="cursor-pointer px-2 py-1.5 hover:bg-slate-100"
-                >
-                    {item.diagnosis}
-                </div>
-                ))}
-            </div>
-            )}
-        </div>
+                    className="
+                        h-8
+                        w-full
+                        rounded-md
+                        border
+                        border-slate-300
+                        bg-slate-50
+                        px-2.5
+                        text-[11px]
+                        text-slate-700
+                        placeholder:text-slate-400
+                        outline-none
+                        transition
+                        hover:border-slate-400
+                        focus:border-blue-500
+                        focus:bg-white
+                        focus:ring-2
+                        focus:ring-blue-100
+                    "
+                />
 
-        {diagnoses.length > 0 && (
-            <div className="mt-2 flex flex-wrap gap-1.5">
-            {diagnoses.map((item) => (
-                <div
-                key={item.diagnosis}
-                className="flex items-center gap-1.5 rounded-full border border-blue-200 bg-blue-50 px-2 py-0.5 text-xs text-blue-700"
-                >
-                <span>{item.diagnosis}</span>
-                <button
-                    type="button"
-                    onClick={() => removeDiagnosis(item.diagnosis)}
-                    className="font-bold text-red-500 hover:text-red-700"
-                >
-                    ×
-                </button>
-                </div>
-            ))}
+                {/* Provisional Added Items */}
+                {provisionalDiagnoses.length > 0 && (
+                    <div className="mt-1.5 flex flex-wrap gap-1">
+                        {provisionalDiagnoses.map((item) => (
+                            <div
+                                key={`${item.type}-${item.diagnosis}`}
+                                className="
+                                    inline-flex
+                                    items-center
+                                    gap-1
+                                    rounded-full
+                                    border
+                                    border-blue-200
+                                    bg-blue-50
+                                    px-2
+                                    py-0.5
+                                    text-[10px]
+                                    font-medium
+                                    text-blue-700
+                                "
+                            >
+                                <span>{item.diagnosis}</span>
+
+                                <button
+                                    type="button"
+                                    onClick={() =>
+                                        removeDiagnosis(
+                                            "PROVISIONAL",
+                                            item.diagnosis
+                                        )
+                                    }
+                                    className="font-bold text-blue-400 hover:text-red-500"
+                                >
+                                    ×
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                )}
             </div>
-        )}
+
+            {/* Final Diagnosis */}
+            <div>
+                <label className="mb-1 block text-[10px] font-semibold uppercase tracking-wide text-slate-600">
+                    Final
+                </label>
+
+                <input
+                    type="text"
+                    value={values.FINAL}
+                    placeholder="Enter final diagnosis"
+                    onChange={(e) =>
+                        setValues((prev) => ({
+                            ...prev,
+                            FINAL: e.target.value,
+                        }))
+                    }
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                            e.preventDefault();
+                            addDiagnosis("FINAL");
+                        }
+                    }}
+                    className="
+                        h-8
+                        w-full
+                        rounded-md
+                        border
+                        border-slate-300
+                        bg-slate-50
+                        px-2.5
+                        text-[11px]
+                        text-slate-700
+                        placeholder:text-slate-400
+                        outline-none
+                        transition
+                        hover:border-slate-400
+                        focus:border-blue-500
+                        focus:bg-white
+                        focus:ring-2
+                        focus:ring-blue-100
+                    "
+                />
+
+                {/* Final Added Items */}
+                {finalDiagnoses.length > 0 && (
+                    <div className="mt-1.5 flex flex-wrap gap-1">
+                        {finalDiagnoses.map((item) => (
+                            <div
+                                key={`${item.type}-${item.diagnosis}`}
+                                className="
+                                    inline-flex
+                                    items-center
+                                    gap-1
+                                    rounded-full
+                                    border
+                                    border-emerald-200
+                                    bg-emerald-50
+                                    px-2
+                                    py-0.5
+                                    text-[10px]
+                                    font-medium
+                                    text-emerald-700
+                                "
+                            >
+                                <span>{item.diagnosis}</span>
+
+                                <button
+                                    type="button"
+                                    onClick={() =>
+                                        removeDiagnosis(
+                                            "FINAL",
+                                            item.diagnosis
+                                        )
+                                    }
+                                    className="font-bold text-emerald-400 hover:text-red-500"
+                                >
+                                    ×
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
         </div>
     );
-    };
-
-    export default DiagnosisDetailsScreen;
+}
