@@ -128,6 +128,7 @@ export default function ComplaintDetailsScreen({
                                             addComplaint(side);
                                         }
                                     }}
+                                    onBlur={() => addComplaint(side)}
                                     className="
                                         h-8
                                         min-w-0

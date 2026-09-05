@@ -115,6 +115,7 @@ export default function DiagnosisDetailsScreen({
                             addDiagnosis("PROVISIONAL");
                         }
                     }}
+                    onBlur={() => addDiagnosis("PROVISIONAL")}
                     className="
                         h-8
                         w-full
@@ -199,6 +200,7 @@ export default function DiagnosisDetailsScreen({
                             addDiagnosis("FINAL");
                         }
                     }}
+                    onBlur={() => addDiagnosis("FINAL")}
                     className="
                         h-8
                         w-full
@@ -232,13 +234,13 @@ export default function DiagnosisDetailsScreen({
                                     gap-1
                                     rounded-full
                                     border
-                                    border-emerald-200
-                                    bg-emerald-50
+                                    border-blue-200
+                                    bg-blue-50
                                     px-2
                                     py-0.5
                                     text-[10px]
                                     font-medium
-                                    text-emerald-700
+                                    text-blue-700
                                 "
                             >
                                 <span>{item.diagnosis}</span>
@@ -251,7 +253,7 @@ export default function DiagnosisDetailsScreen({
                                             item.diagnosis
                                         )
                                     }
-                                    className="font-bold text-emerald-400 hover:text-red-500"
+                                    className="font-bold text-blue-400 hover:text-red-500"
                                 >
                                     ×
                                 </button>
