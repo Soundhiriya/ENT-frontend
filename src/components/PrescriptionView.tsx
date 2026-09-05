@@ -1,7 +1,7 @@
 "use client";
 
 import QRCode from "react-qr-code";
-import { PlayCircle } from "lucide-react";
+import { PlayCircle, Printer } from "lucide-react";
 
 import { PrescriptionViewData } from "@/src/types/prescription";
 
@@ -1821,6 +1821,20 @@ export default function PrescriptionView({
         This is a digitally generated prescription from
         Dr. G. SubaJothiKumar, MBBS., MS(ENT) — ENT Specialist.
       </div>
+
+      {onPrint && (
+        <div className="mt-5 flex justify-end print:hidden">
+          <button
+            type="button"
+            onClick={onPrint}
+            aria-label="Print prescription"
+            className="inline-flex items-center gap-2 rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2"
+          >
+            <Printer size={16} aria-hidden="true" />
+            Print Prescription
+          </button>
+        </div>
+      )}
 
     </div>
   );
